@@ -1,95 +1,182 @@
 import { useState } from 'react';
 import { supabase } from '@services/supabase';
-import { useAuth } from '@contexts/AuthContext';
+import { useQuery } from '@tanstack/react-query';
 
 export function DebugPage() {
-  const { user, session, isAdmin } = useAuth();
-  const [testResults, setTestResults] = useState<any[]>([]);
-
-  const addResult = (test: string, result: any) => {
-    setTestResults(prev => [...prev, { test, result, time: new Date().toISOString() }]);
-  };
-
-  const testAuth = async () => {
-    setTestResults([]);
-    
-    // Test 1: Current session
-    const { data: { session: currentSession }, error: sessionError } = await supabase.auth.getSession();
-    addResult('Current Session', { 
-      hasSession: !!currentSession,
-      user: currentSession?.user?.email,
-      role: currentSession?.user?.user_metadata?.role,
-      error: sessionError?.message 
-    });
-
-    // Test 2: Direct table access
-    const tables = ['user_profile', 'content_item', 'content_pack', 'ad_campaign'];
-    for (const table of tables) {
-      const { data, error } = await supabase.from(table).select('*').limit(1);
-      addResult(`Fetch ${table}`, { 
-        success: !error, 
-        count: data?.length || 0,
-        error: error?.message,
-        hint: error?.hint
-      });
+  const [testResult, setTestResult] = useState<any>(null);
+  
+  // Test database connection
+  const { data: stats, error: statsError, isLoading } = useQuery({
+    queryKey: ['debug-stats'],
+    queryFn: async () => {
+      console.log('Testing Supabase connection...');
+      console.log('URL:', import.meta.env.VITE_SUPABASE_URL);
+      
+      try {
+        // Test various queries
+        const results: any = {};
+        
+        // Count queries
+        const { count: userCount, error: userError } = await supabase
+          .from('user_profile')
+          .select('*', { count: 'exact', head: true });
+        results.userCount = { count: userCount, error: userError };
+        
+        const { count: contentCount, error: contentError } = await supabase
+          .from('content_item')
+          .select('*', { count: 'exact', head: true })
+          .eq('active', true);
+        results.contentCount = { count: contentCount, error: contentError };
+        
+        const today = new Date().toISOString().split('T')[0];
+        const { count: sessionCount, error: sessionError } = await supabase
+          .from('session')
+          .select('*', { count: 'exact', head: true })
+          .gte('started_at', today);
+        results.sessionCount = { count: sessionCount, error: sessionError };
+        
+        const { count: campaignCount, error: campaignError } = await supabase
+          .from('ad_campaign')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'active');
+        results.campaignCount = { count: campaignCount, error: campaignError };
+        
+        // Test actual data fetch
+        const { data: sampleContent, error: sampleError } = await supabase
+          .from('content_item')
+          .select('id, game_key, active')
+          .limit(5);
+        results.sampleContent = { data: sampleContent, error: sampleError };
+        
+        return results;
+      } catch (error) {
+        console.error('Query error:', error);
+        return { error: error.message };
+      }
+    },
+    refetchOnWindowFocus: false
+  });
+  
+  const runManualTest = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('user_profile')
+        .select('user_id')
+        .limit(1);
+      
+      setTestResult({ data, error, timestamp: new Date().toISOString() });
+    } catch (err) {
+      setTestResult({ error: err.message, timestamp: new Date().toISOString() });
     }
-
-    // Test 3: Check RLS context
-    const { data: rlsData, error: rlsError } = await supabase.rpc('check_auth_context');
-    addResult('RLS Context', { data: rlsData, error: rlsError?.message });
   };
-
-  const testLogin = async () => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: 'dashboard@clika.com',
-      password: 'Dashboard2024!'
-    });
-    addResult('Login Test', { 
-      success: !error,
-      user: data?.user?.email,
-      role: data?.user?.user_metadata?.role,
-      error: error?.message 
-    });
-  };
-
-  const clearSession = async () => {
-    await supabase.auth.signOut();
-    setTestResults([]);
-    window.location.reload();
-  };
-
+  
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Debug Authentication</h1>
+      <h1 className="text-2xl font-bold mb-6">Supabase Debug Page</h1>
       
-      <div className="mb-6 p-4 bg-gray-800 rounded">
-        <h2 className="font-bold mb-2">Current State</h2>
-        <pre className="text-sm">
-          {JSON.stringify({
-            user: user?.email,
-            userRole: user?.user_metadata?.role,
-            isAdmin,
-            hasSession: !!session,
-            supabaseUrl: import.meta.env.VITE_SUPABASE_URL
-          }, null, 2)}
-        </pre>
-      </div>
-
-      <div className="space-x-4 mb-6">
-        <button onClick={testAuth} className="btn btn-primary">Test Auth & Fetch</button>
-        <button onClick={testLogin} className="btn btn-secondary">Test Login</button>
-        <button onClick={clearSession} className="btn btn-danger">Clear Session</button>
-      </div>
-
-      <div className="space-y-4">
-        {testResults.map((result, i) => (
-          <div key={i} className="p-4 bg-gray-800 rounded">
-            <h3 className="font-bold text-sm text-gray-400">{result.time} - {result.test}</h3>
-            <pre className="text-sm mt-2 overflow-auto">
-              {JSON.stringify(result.result, null, 2)}
-            </pre>
+      <div className="space-y-6">
+        {/* Environment Info */}
+        <div className="card p-6">
+          <h2 className="text-lg font-semibold mb-4">Environment Variables</h2>
+          <div className="space-y-2 font-mono text-sm">
+            <div>
+              <span className="text-gray-500">VITE_SUPABASE_URL:</span>{' '}
+              <span className="text-blue-500">{import.meta.env.VITE_SUPABASE_URL || 'NOT SET'}</span>
+            </div>
+            <div>
+              <span className="text-gray-500">Has Anon Key:</span>{' '}
+              <span className={import.meta.env.VITE_SUPABASE_ANON_KEY ? 'text-green-500' : 'text-red-500'}>
+                {import.meta.env.VITE_SUPABASE_ANON_KEY ? 'YES' : 'NO'}
+              </span>
+            </div>
           </div>
-        ))}
+        </div>
+        
+        {/* Connection Test Results */}
+        <div className="card p-6">
+          <h2 className="text-lg font-semibold mb-4">Database Connection Test</h2>
+          
+          {isLoading && <p>Testing connection...</p>}
+          
+          {statsError && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              <p className="font-semibold">Connection Error:</p>
+              <pre className="text-sm mt-2">{JSON.stringify(statsError, null, 2)}</pre>
+            </div>
+          )}
+          
+          {stats && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded">
+                  <p className="text-sm text-gray-500">User Profiles</p>
+                  <p className="text-2xl font-bold">
+                    {stats.userCount.error ? '❌ Error' : stats.userCount.count || 0}
+                  </p>
+                  {stats.userCount.error && (
+                    <p className="text-xs text-red-500 mt-1">{stats.userCount.error.message}</p>
+                  )}
+                </div>
+                
+                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded">
+                  <p className="text-sm text-gray-500">Active Content</p>
+                  <p className="text-2xl font-bold">
+                    {stats.contentCount.error ? '❌ Error' : stats.contentCount.count || 0}
+                  </p>
+                  {stats.contentCount.error && (
+                    <p className="text-xs text-red-500 mt-1">{stats.contentCount.error.message}</p>
+                  )}
+                </div>
+                
+                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded">
+                  <p className="text-sm text-gray-500">Sessions Today</p>
+                  <p className="text-2xl font-bold">
+                    {stats.sessionCount.error ? '❌ Error' : stats.sessionCount.count || 0}
+                  </p>
+                  {stats.sessionCount.error && (
+                    <p className="text-xs text-red-500 mt-1">{stats.sessionCount.error.message}</p>
+                  )}
+                </div>
+                
+                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded">
+                  <p className="text-sm text-gray-500">Active Campaigns</p>
+                  <p className="text-2xl font-bold">
+                    {stats.campaignCount.error ? '❌ Error' : stats.campaignCount.count || 0}
+                  </p>
+                  {stats.campaignCount.error && (
+                    <p className="text-xs text-red-500 mt-1">{stats.campaignCount.error.message}</p>
+                  )}
+                </div>
+              </div>
+              
+              {stats.sampleContent && (
+                <div className="mt-4">
+                  <p className="font-semibold mb-2">Sample Content Items:</p>
+                  <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded text-xs overflow-auto">
+                    {JSON.stringify(stats.sampleContent, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+        
+        {/* Manual Test */}
+        <div className="card p-6">
+          <h2 className="text-lg font-semibold mb-4">Manual Test</h2>
+          <button
+            onClick={runManualTest}
+            className="btn btn-primary mb-4"
+          >
+            Run Manual Query
+          </button>
+          
+          {testResult && (
+            <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded text-xs overflow-auto">
+              {JSON.stringify(testResult, null, 2)}
+            </pre>
+          )}
+        </div>
       </div>
     </div>
   );

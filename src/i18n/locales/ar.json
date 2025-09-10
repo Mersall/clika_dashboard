@@ -1,0 +1,1016 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "content": "المحتوى",
+    "contentPacks": "باقات المحتوى",
+    "review": "المراجعة",
+    "sessions": "الجلسات",
+    "deviceAnalytics": "تحليلات الأجهزة",
+    "rounds": "تحليلات الجولات",
+    "locations": "أماكن المستخدمين",
+    "retention": "الاحتفاظ",
+    "exposure": "التعرض",
+    "campaigns": "الحملات",
+    "analytics": "التحليلات",
+    "users": "المستخدمين",
+    "settings": "الإعدادات",
+    "featureFlags": "خصائص التجربة",
+    "apiTest": "اختبار API",
+    "logout": "خروج"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "subtitle": "أهلاً بيك في لوحة تحكم كليكا",
+    "stats": {
+      "totalUsers": "إجمالي المستخدمين",
+      "sessionsToday": "جلسات النهاردة",
+      "activeContent": "محتوى شغال",
+      "activeCampaigns": "حملات شغالة"
+    },
+    "fromYesterday": "من امبارح",
+    "recentSessions": "آخر الجلسات",
+    "topContent": "أحسن محتوى",
+    "sessionActivity": "نشاط الجلسات هيظهر هنا",
+    "popularContent": "المحتوى المشهور هيظهر هنا"
+  },
+  "content": {
+    "title": "إدارة المحتوى",
+    "subtitle": "تحكم في محتوى اللعبة والأسئلة",
+    "addContent": "ضيف محتوى",
+    "reviewQueue": "طابور المراجعة",
+    "contentPacks": "باقات المحتوى",
+    "export": "تصدير",
+    "search": "دور على محتوى، تاجات، أو نوع لعبة...",
+    "allGames": "كل الألعاب",
+    "tableHeaders": {
+      "content": "المحتوى",
+      "game": "اللعبة",
+      "difficulty": "العمق/الصعوبة",
+      "tags": "التاجات",
+      "status": "الحالة",
+      "actions": "الأفعال"
+    },
+    "status": {
+      "active": "شغال",
+      "inactive": "مش شغال",
+      "draft": "مسودة",
+      "inReview": "بيتراجع",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض",
+      "live": "لايف",
+      "paused": "متوقف",
+      "archived": "مؤرشف"
+    },
+    "form": {
+      "editContent": "عدّل المحتوى",
+      "createContent": "اعمل محتوى جديد",
+      "gameType": "نوع اللعبة",
+      "question": "السؤال",
+      "questionAr": "السؤال (عربي)",
+      "questionEn": "السؤال (إنجليزي)",
+      "statement": "العبارة",
+      "statementAr": "العبارة (عربي)",
+      "statementEn": "العبارة (إنجليزي)",
+      "personName": "اسم الشخص",
+      "difficulty": "الصعوبة/العمق",
+      "clues": "التلميحات",
+      "tags": "التاجات (افصل بفاصلة)",
+      "tagsPlaceholder": "مثلاً: مرح، اجتماعي، كسر جليد",
+      "similarityGroup": "مجموعة التشابه",
+      "similarityPlaceholder": "تجميع اختياري للمحتوى المشابه",
+      "active": "شغال",
+      "status": "الحالة"
+    },
+    "levels": {
+      "0": "مستوى 0 - كسر جليد",
+      "1": "مستوى 1 - خفيف",
+      "2": "مستوى 2 - متوسط",
+      "3": "مستوى 3 - عميق",
+      "4": "مستوى 4 - حار"
+    },
+    "games": {
+      "who_among_us": "مين فينا؟",
+      "agree_disagree": "موافق/مش موافق",
+      "guess_the_person": "خمن الشخص"
+    },
+    "noContent": "مفيش محتوى",
+    "noMatch": "مفيش محتوى مطابق للبحث",
+    "noTags": "مفيش تاجات",
+    "deleteConfirm": {
+      "title": "امسح المحتوى",
+      "message": "متأكد إنك عايز تمسح محتوى {{game}} ده؟ مش هتقدر ترجعه تاني.",
+      "confirmText": "امسح"
+    },
+    "bulkActions": {
+      "activate": {
+        "title": "شغّل المحتوى",
+        "message": "متأكد إنك عايز تشغّل {{count}} عنصر؟",
+        "confirmText": "شغّل"
+      },
+      "deactivate": {
+        "title": "وقّف المحتوى",
+        "message": "متأكد إنك عايز توقّف {{count}} عنصر؟",
+        "confirmText": "وقّف"
+      },
+      "delete": {
+        "title": "امسح المحتوى",
+        "message": "متأكد إنك عايز تمسح {{count}} عنصر؟ مش هتقدر ترجعهم تاني.",
+        "confirmText": "امسح"
+      }
+    },
+    "toast": {
+      "created": "المحتوى الجديد اتضاف",
+      "updated": "المحتوى اتحدث",
+      "deleted": "المحتوى اتمسح",
+      "activated": "{{count}} عنصر اتشغل",
+      "deactivated": "{{count}} عنصر اتوقف",
+      "bulkDeleted": "{{count}} عنصر اتمسح"
+    }
+  },
+  "contentReview": {
+    "title": "مراجعة المحتوى",
+    "subtitle": "راجع واعتمد طلبات المحتوى",
+    "reviewGuidelines": "إرشادات المراجعة",
+    "noContent": "مفيش محتوى للمراجعة في القسم ده",
+    "toast": {
+      "approved": "المحتوى اتوافق عليه",
+      "rejected": "المحتوى اترفض",
+      "changesRequested": "طلبنا تعديلات"
+    }
+  },
+  "sessions": {
+    "title": "الجلسات والجولات",
+    "subtitle": "تابع جلسات اللعبة ونشاط اللاعبين",
+    "filters": {
+      "allGames": "كل الألعاب",
+      "last24Hours": "آخر 24 ساعة",
+      "last7Days": "آخر 7 أيام",
+      "last30Days": "آخر 30 يوم",
+      "allTime": "كل الوقت"
+    },
+    "stats": {
+      "totalSessions": "كل الجلسات",
+      "activeSessions": "جلسات شغالة",
+      "avgDuration": "متوسط الوقت",
+      "mostPlayed": "الأكتر لعب"
+    },
+    "gameDistribution": "توزيع الألعاب",
+    "recentSessions": "آخر الجلسات",
+    "tableHeaders": {
+      "sessionId": "رقم الجلسة",
+      "user": "المستخدم",
+      "game": "اللعبة",
+      "started": "بدأت",
+      "duration": "المدة",
+      "rounds": "الجولات",
+      "status": "الحالة"
+    },
+    "status": {
+      "active": "شغالة",
+      "ended": "خلصت"
+    },
+    "loading": "بيحمّل الجلسات...",
+    "noSessions": "مفيش جلسات",
+    "noMatch": "مفيش جلسات زي اللي بتدور عليه",
+    "search": "دوّر في الجلسات بالرقم أو اليوزر أو اللعبة...",
+    "export": "نزّل الجلسات",
+    "durationFormat": "{{duration}} دقيقة",
+    "roundsFormat": "{{count}} جولة"
+  },
+  "campaigns": {
+    "title": "الحملات الإعلانية",
+    "subtitle": "تحكم في الحملات الإعلانية والإبداعات",
+    "create": "اعمل حملة",
+    "export": "صدّر",
+    "search": "دور على حملات، حالة، أو استهداف...",
+    "tableHeaders": {
+      "campaignName": "اسم الحملة",
+      "status": "الحالة",
+      "budget": "الميزانية",
+      "sov": "نسبة الظهور",
+      "startDate": "تاريخ البداية",
+      "targeting": "الاستهداف",
+      "actions": "الأفعال"
+    },
+    "stats": {
+      "total": "كل الحملات",
+      "active": "حملات شغالة",
+      "dailyCap": "الحد اليومي الكلي",
+      "avgSOV": "متوسط نسبة الظهور"
+    },
+    "form": {
+      "editCampaign": "عدّل الحملة",
+      "createCampaign": "اعمل حملة جديدة",
+      "campaignName": "اسم الحملة",
+      "status": "الحالة",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية",
+      "dailyCap": "الحد اليومي",
+      "dailyCapPlaceholder": "مثلاً: 1000",
+      "sovPercent": "نسبة الظهور %",
+      "sovPlaceholder": "مثلاً: 25",
+      "priority": "الأولوية",
+      "geoScope": "النطاق الجغرافي",
+      "language": "اللغة",
+      "global": "عالمي",
+      "country": "دولة",
+      "city": "مدينة",
+      "region": "منطقة",
+      "all": "الكل"
+    },
+    "statuses": {
+      "active": "شغالة",
+      "paused": "متوقفة",
+      "ended": "انتهت",
+      "draft": "مسودة"
+    },
+    "targeting": {
+      "noTargeting": "مفيش استهداف",
+      "global": "عالمي",
+      "to": "لـ"
+    },
+    "deleteConfirm": {
+      "title": "امسح الحملة",
+      "message": "متأكد إنك عايز تمسح الحملة \"{{name}}\"؟ مش هتقدر ترجعها تاني.",
+      "confirmText": "امسح الحملة"
+    },
+    "bulkActions": {
+      "activate": {
+        "title": "شغّل الحملات",
+        "message": "متأكد إنك عايز تشغّل {{count}} حملة؟",
+        "confirmText": "شغّل"
+      },
+      "pause": {
+        "title": "وقّف الحملات",
+        "message": "متأكد إنك عايز توقّف {{count}} حملة؟",
+        "confirmText": "وقّف"
+      },
+      "delete": {
+        "title": "امسح الحملات",
+        "message": "متأكد إنك عايز تمسح {{count}} حملة؟ مش هتقدر ترجعهم تاني.",
+        "confirmText": "امسح"
+      }
+    },
+    "toast": {
+      "created": "الحملة الجديدة اتعملت",
+      "updated": "الحملة اتحدثت",
+      "deleted": "الحملة اتمسحت",
+      "activated": "{{count}} حملة اتشغلت",
+      "paused": "{{count}} حملة اتوقفت",
+      "bulkDeleted": "{{count}} حملة اتمسحت"
+    },
+    "loading": "بيحمّل...",
+    "error": "خطأ",
+    "noCampaigns": "مفيش حملات. اعمل أول حملة عشان تبدأ.",
+    "noMatch": "مفيش حملات مطابقة للبحث",
+    "manageCreatives": "تحكم في الإبداعات"
+  },
+  "adCreative": {
+    "title": "الإبداعات الإعلانية لـ {{campaign}}",
+    "subtitle": "تحكم في نص الإعلان بأكتر من لغة وإعدادات الإبداع",
+    "create": "ضيف إبداع",
+    "noCreatives": "مفيش إبداعات للحملة دي لسه",
+    "noText": "مفيش نص",
+    "form": {
+      "arabicText": "النص العربي",
+      "englishText": "النص الإنجليزي",
+      "textLine": "سطر {{number}}",
+      "textLinePlaceholder": "اكتب سطر {{number}}",
+      "primaryLanguage": "اللغة الأساسية",
+      "primaryLanguageHelp": "اختار اللغة الأساسية للإبداع ده",
+      "link": "اللينك",
+      "linkPlaceholder": "https://example.com",
+      "active": "شغال"
+    },
+    "languages": {
+      "arabic": "عربي",
+      "english": "إنجليزي"
+    },
+    "deleteConfirm": {
+      "title": "امسح الإبداع",
+      "message": "متأكد إنك عايز تمسح الإبداع ده؟",
+      "confirmText": "امسح"
+    },
+    "bulkActions": {
+      "delete": {
+        "title": "امسح الإبداعات",
+        "message": "متأكد إنك عايز تمسح {{count}} إبداع؟",
+        "confirmText": "امسح"
+      }
+    },
+    "toast": {
+      "activated": "{{count}} إبداع اتشغل",
+      "deactivated": "{{count}} إبداع اتوقف",
+      "bulkDeleted": "{{count}} إبداع اتمسح"
+    },
+    "errors": {
+      "noText": "لازم تكتب نص للغة الأساسية على الأقل"
+    }
+  },
+  "analytics": {
+    "title": "التحليلات",
+    "subtitle": "أداء اللعبة ورؤى المستخدمين",
+    "filters": {
+      "last24Hours": "آخر 24 ساعة",
+      "last7Days": "آخر 7 أيام",
+      "last30Days": "آخر 30 يوم",
+      "last90Days": "آخر 90 يوم"
+    },
+    "stats": {
+      "activeUsers": "مستخدمين نشطين",
+      "totalRounds": "كل الجولات",
+      "avgSessionTime": "متوسط وقت الجلسة",
+      "totalContent": "كل المحتوى"
+    },
+    "charts": {
+      "sessionsOverTime": "الجلسات عبر الوقت",
+      "sessions": "جلسات",
+      "gameDistribution": "توزيع الألعاب",
+      "contentByStatus": "المحتوى حسب الحالة",
+      "gamePerformance": "أداء اللعبة",
+      "noData": "مفيش بيانات"
+    },
+    "adDelivery": {
+      "title": "تحليلات توصيل الإعلانات",
+      "totalImpressions": "كل مرات الظهور",
+      "uniqueUsers": "مستخدمين مختلفين",
+      "activeCampaigns": "حملات شغالة",
+      "campaignPerformance": "أداء الحملة",
+      "impressions": "مرات ظهور"
+    },
+    "dau": {
+      "title": "المستخدمين النشطين يومياً",
+      "last7Days": "آخر 7 أيام",
+      "last14Days": "آخر 14 يوم",
+      "last30Days": "آخر 30 يوم",
+      "currentDAU": "DAU النهاردة",
+      "avgDAU": "متوسط DAU",
+      "newVsReturning": "جديد ضد راجع",
+      "totalUsers": "كل المستخدمين",
+      "newUsers": "مستخدمين جداد",
+      "returningUsers": "مستخدمين راجعين",
+      "noData": "مفيش بيانات مستخدمين نشطين يومياً"
+    },
+    "loading": "بيحمّل التحليلات...",
+    "minutes": "دقيقة",
+    "rounds": "جولات",
+    "unknown": "مش معروف"
+  },
+  "users": {
+    "title": "إدارة المستخدمين",
+    "subtitle": "تحكم في حسابات المستخدمين والصلاحيات",
+    "create": "اعمل مستخدم",
+    "export": "صدّر",
+    "search": "دور بالاسم، الدور، أو الـID...",
+    "tableHeaders": {
+      "user": "المستخدم",
+      "userId": "ID المستخدم",
+      "country": "الدولة",
+      "role": "الدور",
+      "consents": "الموافقات",
+      "joined": "انضم",
+      "updated": "اتحدث",
+      "createdAt": "اتعمل",
+      "actions": "الأفعال"
+    },
+    "tabs": {
+      "adminUsers": "مستخدمين الإدارة",
+      "appUsers": "مستخدمين التطبيق"
+    },
+    "noUsers": "مفيش مستخدمين",
+    "noMatch": "مفيش مستخدمين مطابقين للبحث",
+    "unknownUser": "مستخدم مجهول",
+    "na": "مش متاح",
+    "geo": "المكان",
+    "ads": "الإعلانات",
+    "yes": "أيوة",
+    "no": "لأ",
+    "unknown": "مش معروف",
+    "noRole": "مفيش دور",
+    "roles": {
+      "user": "مستخدم",
+      "editor": "محرر",
+      "reviewer": "مراجع",
+      "admin": "مدير",
+      "advertiser": "معلن",
+      "analyst": "محلل"
+    },
+    "roleDescriptions": {
+      "admin": "تحكم كامل في النظام",
+      "editor": "يقدر يتحكم في المحتوى والحملات",
+      "reviewer": "يقدر يراجع ويوافق على المحتوى",
+      "user": "مشاهدة بس"
+    },
+    "form": {
+      "createUser": "اعمل مستخدم",
+      "updateUser": "حدّث المستخدم",
+      "displayName": "الاسم المعروض",
+      "displayNamePlaceholder": "محمد أحمد",
+      "role": "الدور",
+      "saving": "بيحفظ...",
+      "cancel": "إلغاء"
+    },
+    "toast": {
+      "created": "المستخدم الجديد اتضاف",
+      "updated": "المستخدم اتحدث",
+      "deleted": "المستخدم اتشال"
+    },
+    "errors": {
+      "createAuth": "عشان تعمل مستخدمين جداد لازم تكون مدير للنظام"
+    },
+    "loading": "بيحمّل...",
+    "error": "خطأ"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "اضبط إعدادات اللعبة والخصائص ومعاملات النظام",
+    "lightMode": "الوضع النهاري",
+    "darkMode": "الوضع الليلي",
+    "tabs": {
+      "game": "إعدادات اللعبة",
+      "features": "الخصائص",
+      "system": "إعدادات النظام"
+    },
+    "games": {
+      "who_among_us": "مين فينا؟",
+      "agree_disagree": "موافق/مش موافق",
+      "guess_the_person": "خمن الشخص"
+    },
+    "gameConfig": {
+      "enableGame": "شغّل اللعبة",
+      "explorationPercent": "نسبة الاستكشاف %",
+      "explorationTooltip": "نسبة المحتوى الجديد للاستكشاف",
+      "maxL4": "أقصى عدد أسئلة L4",
+      "maxL4Tooltip": "أقصى عدد أسئلة مستوى 4 في الجلسة",
+      "cooldownHours": "ساعات الانتظار",
+      "cooldownTooltip": "الساعات قبل ما المحتوى يتكرر"
+    },
+    "featureFlags": {
+      "audience": "الجمهور",
+      "percentage": "{{percent}}%"
+    },
+    "system": {
+      "title": "إعدادات النظام",
+      "sessionTimeout": "وقت انتهاء الجلسة (دقائق)",
+      "maxConcurrentSessions": "أقصى عدد جلسات متزامنة",
+      "dataRetentionDays": "الاحتفاظ بالبيانات (أيام)",
+      "enableAnalytics": "شغّل التحليلات"
+    },
+    "loading": "بيحمّل..."
+  },
+  "login": {
+    "title": "دخول لحسابك",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "admin@clika.com",
+    "password": "كلمة السر",
+    "passwordPlaceholder": "••••••••",
+    "rememberMe": "افتكرني",
+    "forgotPassword": "نسيت كلمة السر؟",
+    "signIn": "دخول",
+    "signingIn": "بيحصل دخول...",
+    "signingUp": "بيتعمل الحساب...",
+    "noAccount": "معندكش حساب؟",
+    "haveAccount": "عندك حساب بالفعل؟",
+    "signUp": "اعمل حساب",
+    "continueWithGoogle": "كمّل بجوجل",
+    "continueWithGithub": "كمّل بجيت هاب",
+    "orContinueWith": "أو كمّل بالإيميل",
+    "errors": {
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "invalidEmail": "البريد الإلكتروني مش صح",
+      "passwordRequired": "كلمة السر مطلوبة",
+      "passwordLength": "كلمة السر لازم تكون 8 حروف على الأقل",
+      "accountExists": "في حساب بالبريد ده بالفعل",
+      "loginFailed": "الدخول فشل",
+      "signupFailed": "عمل الحساب فشل"
+    },
+    "success": {
+      "accountCreated": "الحساب اتعمل! بص على إيميلك عشان تأكد الحساب.",
+      "welcomeBack": "أهلاً بيك!"
+    },
+    "defaultRole": "مراجع",
+    "termsText": "بالدخول، انت موافق على شروط الخدمة وسياسة الخصوصية"
+  },
+  "common": {
+    "loading": "بيحمّل...",
+    "error": "خطأ",
+    "save": "احفظ",
+    "saving": "بيحفظ...",
+    "cancel": "إلغاء",
+    "delete": "امسح",
+    "edit": "عدّل",
+    "create": "اعمل",
+    "update": "حدّث",
+    "actions": "أفعال",
+    "confirm": "أكد",
+    "yes": "أيوة",
+    "no": "لأ",
+    "or": "أو",
+    "na": "مش متاح",
+    "unknown": "مش معروف",
+    "all": "الكل",
+    "none": "ولا حاجة",
+    "select": "اختار",
+    "search": "بحث",
+    "filter": "فلتر",
+    "export": "صدّر",
+    "import": "استورد",
+    "refresh": "حدّث",
+    "close": "اقفل",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "submit": "ابعت",
+    "reset": "صفّر",
+    "clear": "امسح",
+    "view": "شوف",
+    "download": "نزّل",
+    "upload": "ارفع",
+    "share": "شارك",
+    "copy": "انسخ",
+    "copied": "اتنسخ!",
+    "date": {
+      "today": "النهاردة",
+      "yesterday": "امبارح",
+      "tomorrow": "بكرة",
+      "thisWeek": "الأسبوع ده",
+      "lastWeek": "الأسبوع اللي فات",
+      "thisMonth": "الشهر ده",
+      "lastMonth": "الشهر اللي فات",
+      "custom": "مخصص"
+    }
+  },
+  "bulk": {
+    "selected": "{{count}} محدد",
+    "selectAll": "حدد الكل",
+    "deselectAll": "شيل التحديد",
+    "actions": {
+      "activate": "شغّل",
+      "deactivate": "وقّف",
+      "delete": "امسح",
+      "pause": "وقّف مؤقت",
+      "export": "صدّر",
+      "bulkEdit": "عدّل كله"
+    }
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة",
+    "of": "من",
+    "items": "عناصر",
+    "itemsPerPage": "عناصر في الصفحة",
+    "showing": "بيعرض {{from}} لـ {{to}} من {{total}} نتيجة"
+  },
+  "validation": {
+    "required": "الحقل ده مطلوب",
+    "email": "اكتب إيميل صحيح",
+    "minLength": "لازم يكون {{min}} حرف على الأقل",
+    "maxLength": "ميزدش عن {{max}} حرف",
+    "minValue": "لازم يكون {{min}} على الأقل",
+    "maxValue": "ميزدش عن {{max}}",
+    "pattern": "الشكل مش صح",
+    "unique": "القيمة دي موجودة بالفعل",
+    "passwordMatch": "كلمات السر مش زي بعض"
+  },
+  "confirmDialog": {
+    "defaultTitle": "تأكيد",
+    "defaultMessage": "متأكد إنك عايز تكمل؟",
+    "defaultConfirm": "أكد",
+    "defaultCancel": "إلغاء"
+  },
+  "contentPacks": {
+    "title": "باقات المحتوى",
+    "subtitle": "تحكم في باقات ومجموعات المحتوى",
+    "create": "اعمل باقة",
+    "createPack": "اعمل باقة محتوى",
+    "editPack": "عدّل باقة المحتوى",
+    "search": "دور في الباقات بالاسم أو اللعبة أو التاجات...",
+    "noPacks": "مفيش باقات محتوى. اعمل أول باقة عشان تبدأ.",
+    "noMatch": "مفيش باقات مطابقة للبحث",
+    "itemCount": "{{count}} عنصر",
+    "manageItems": "تحكم في العناصر",
+    "itemsInPack": "العناصر في الباقة ({{count}})",
+    "addItems": "ضيف عناصر",
+    "selectItemsToAdd": "اختار عناصر عشان تضيفها",
+    "addSelected": "ضيف {{count}} محدد",
+    "noAvailableItems": "مفيش عناصر للعبة دي",
+    "noItemsInPack": "مفيش عناصر في الباقة دي لسه",
+    "form": {
+      "packName": "اسم الباقة",
+      "packNamePlaceholder": "مجموعة صيف 2024",
+      "selectGame": "اختار لعبة",
+      "tagsPlaceholder": "صيف، مرح، مصري",
+      "status": "الحالة"
+    },
+    "deleteConfirm": {
+      "title": "امسح باقة المحتوى",
+      "message": "متأكد إنك عايز تمسح الباقة \"{{name}}\"؟ مش هتقدر ترجعها تاني.",
+      "confirmText": "امسح الباقة"
+    },
+    "toast": {
+      "created": "باقة المحتوى اتعملت",
+      "updated": "باقة المحتوى اتحدثت",
+      "deleted": "باقة المحتوى اتمسحت",
+      "itemsAdded": "العناصر اتضافت للباقة",
+      "itemRemoved": "العنصر اتشال من الباقة"
+    }
+  },
+  "rounds": {
+    "title": "تحليلات الجولات",
+    "subtitle": "حلل نتائج الجولات وأوقات إكمال اللعبة",
+    "filters": {
+      "allGames": "كل الألعاب",
+      "last24Hours": "آخر 24 ساعة",
+      "last7Days": "آخر 7 أيام",
+      "last30Days": "آخر 30 يوم",
+      "allTime": "كل الوقت"
+    },
+    "stats": {
+      "totalRounds": "كل الجولات",
+      "uniqueSessions": "جلسات مختلفة",
+      "avgDuration": "متوسط المدة",
+      "completionRate": "معدل الإكمال"
+    },
+    "charts": {
+      "timeDistribution": "توزيع وقت الجولات",
+      "decisionBreakdown": "قرارات اللاعبين",
+      "gameDistribution": "الجولات حسب اللعبة",
+      "roundDuration": "مدة الجولة",
+      "roundsByGame": "الجولات حسب اللعبة"
+    },
+    "recentRounds": "آخر الجولات",
+    "tableHeaders": {
+      "roundId": "رقم الجولة",
+      "game": "اللعبة",
+      "duration": "المدة",
+      "decision": "القرار",
+      "time": "الوقت"
+    },
+    "decisions": {
+      "next": "التالي",
+      "skip": "تخطى",
+      "agree": "موافق",
+      "disagree": "مش موافق",
+      "correct": "صح",
+      "wrong": "غلط"
+    },
+    "noRounds": "مفيش جولات للفلاتر المحددة"
+  },
+  "userLocation": {
+    "title": "لوحة أماكن المستخدمين",
+    "subtitle": "التوزيع الجغرافي وإحصاءات الموافقة",
+    "stats": {
+      "totalUsers": "كل المستخدمين",
+      "withLocation": "معاهم مكان",
+      "geoConsent": "موافقة المكان",
+      "adsConsent": "موافقة الإعلانات",
+      "ofTotal": "من الإجمالي",
+      "consented": "وافقوا"
+    },
+    "charts": {
+      "consentTrends": "اتجاهات الموافقة (30 يوم)",
+      "countryDistribution": "التوزيع حسب البلد",
+      "geoConsent": "موافقة المكان",
+      "adsConsent": "موافقة الإعلانات"
+    },
+    "usersList": "تفاصيل أماكن المستخدمين",
+    "showOnlyWithLocation": "اعرض المستخدمين اللي معاهم مكان بس",
+    "tableHeaders": {
+      "user": "المستخدم",
+      "country": "البلد",
+      "lastLocation": "آخر تحديث للمكان",
+      "geoConsent": "موافقة المكان",
+      "adsConsent": "موافقة الإعلانات"
+    },
+    "noData": "مفيش بيانات",
+    "noLocationData": "مفيش بيانات أماكن لسه",
+    "noUsers": "مفيش مستخدمين",
+    "noUsersWithLocation": "مفيش مستخدمين معاهم بيانات أماكن"
+  },
+  "retention": {
+    "title": "مجموعات الاحتفاظ",
+    "subtitle": "تابع احتفاظ المستخدمين مع الوقت",
+    "cohortSize": "حجم المجموعة",
+    "weekly": "أسبوعي",
+    "monthly": "شهري",
+    "stats": {
+      "avgDay1": "متوسط يوم 1",
+      "avgDay7": "متوسط يوم 7",
+      "avgDay30": "متوسط يوم 30",
+      "totalUsers": "كل المستخدمين"
+    },
+    "bestCohort": "أحسن مجموعة",
+    "bestCohortDesc": "المجموعة من {{date}} حققت {{retention}}% احتفاظ لـ7 أيام",
+    "cohortAnalysis": "تحليل المجموعات",
+    "tableHeaders": {
+      "cohort": "المجموعة",
+      "users": "المستخدمين",
+      "day0": "يوم 0",
+      "day1": "يوم 1",
+      "day7": "يوم 7",
+      "day14": "يوم 14",
+      "day30": "يوم 30"
+    },
+    "legend": "دليل معدل الاحتفاظ",
+    "noCohorts": "مفيش بيانات مجموعات"
+  },
+  "exposure": {
+    "title": "متابع التعرض للمحتوى",
+    "subtitle": "راقب ظهور المحتوى وامنع التعرض الزيادة",
+    "userExposure": "تعرض المستخدم للمحتوى",
+    "overexposedContent": "محتوى متعرض له زيادة",
+    "selectUser": "اختار مستخدم",
+    "selectUserPrompt": "اختار مستخدم عشان تشوف تعرضه للمحتوى",
+    "searchContent": "دور على المحتوى...",
+    "threshold": "الحد",
+    "reset": "صفّر",
+    "noExposure": "مفيش بيانات تعرض للمحتوى للمستخدم ده",
+    "noOverexposed": "مفيش محتوى متعرض له زيادة",
+    "noResults": "مفيش محتوى مطابق",
+    "stats": {
+      "totalUsers": "كل المستخدمين",
+      "totalViewed": "المحتوى المعروض",
+      "avgPerUser": "المتوسط للمستخدم",
+      "overexposed": "تعرض زيادة"
+    },
+    "tableHeaders": {
+      "content": "المحتوى",
+      "game": "اللعبة",
+      "seenCount": "عدد المشاهدات",
+      "lastSeen": "آخر مشاهدة",
+      "exposures": "كل التعرض",
+      "users": "المستخدمين",
+      "maxSeen": "أكتر مشاهدة"
+    },
+    "resetDialog": {
+      "title": "صفّر تعرض المستخدم",
+      "message": "متأكد إنك عايز تصفّر كل بيانات تعرض المحتوى للمستخدم ده؟ مش هتقدر ترجع الخطوة دي.",
+      "confirmText": "صفّر التعرض"
+    }
+  },
+  "featureFlags": {
+    "title": "خصائص التجربة",
+    "subtitle": "تحكم في إطلاق الخصائص مع استهداف الجمهور",
+    "create": "اعمل خاصية",
+    "allUsers": "كل المستخدمين",
+    "invalidAudience": "معايير الجمهور مش صح",
+    "enabled": "شغالة",
+    "disabled": "مش شغالة",
+    "noFlags": "مفيش خصائص. اعمل أول خاصية عشان تبدأ.",
+    "countries": "الدول",
+    "minSessions": "أقل عدد جلسات",
+    "roles": "الأدوار",
+    "languages": "اللغات",
+    "geoConsent": "موافقة المكان",
+    "adsConsent": "موافقة الإعلانات",
+    "tableHeaders": {
+      "key": "مفتاح الخاصية",
+      "status": "الحالة",
+      "rollout": "النشر",
+      "audience": "الجمهور",
+      "updated": "اتحدثت",
+      "actions": "الأفعال"
+    },
+    "form": {
+      "editTitle": "عدّل خاصية التجربة",
+      "createTitle": "اعمل خاصية تجربة",
+      "key": "مفتاح الخاصية",
+      "rollout": "نسبة النشر",
+      "audienceBuilder": "منشئ الجمهور",
+      "countries": "الدول (افصل بفاصلة)",
+      "languages": "اللغات (افصل بفاصلة)",
+      "roles": "أدوار المستخدم (افصل بفاصلة)",
+      "minSessions": "أقل عدد جلسات",
+      "requiredConsents": "الموافقات المطلوبة",
+      "geoConsent": "لازم موافقة المكان",
+      "adsConsent": "لازم موافقة الإعلانات"
+    },
+    "deleteConfirm": {
+      "title": "امسح خاصية التجربة",
+      "message": "متأكد إنك عايز تمسح خاصية التجربة \"{{key}}\"؟ مش هتقدر ترجعها تاني.",
+      "confirmText": "امسح الخاصية"
+    }
+  },
+  "help": {
+    "dashboard_totalUsers_title": "إجمالي المستخدمين",
+    "dashboard_totalUsers": "ده العدد الكلي للمستخدمين اللي مسجلين في النظام. بيشمل كل اللي عملوا حساب سواء كانوا نشطين أو لأ. الرقم ده بيساعدك تشوف حجم قاعدة المستخدمين بتاعتك وتقدر تتابع النمو مع الوقت.",
+    
+    "dashboard_sessionsToday_title": "جلسات النهاردة",
+    "dashboard_sessionsToday": "عدد الجلسات اللي حصلت النهاردة من الساعة 12 بالليل. كل مرة مستخدم يفتح التطبيق ويبدأ يلعب بتتحسب جلسة جديدة. ده بيوريك مستوى النشاط اليومي.",
+    
+    "dashboard_activeContent_title": "المحتوى الشغال",
+    "dashboard_activeContent": "عدد قطع المحتوى (أسئلة، عبارات، إلخ) اللي متفعلة دلوقتي وممكن تظهر للمستخدمين. مش بيشمل المحتوى المتوقف أو المسودات أو اللي لسه بيتراجع.",
+    
+    "dashboard_activeCampaigns_title": "الحملات الشغالة",
+    "dashboard_activeCampaigns": "عدد الحملات الإعلانية اللي شغالة دلوقتي. الحملات دي بتعرض إعلانات للمستخدمين حسب الاستهداف والميزانية المحددة.",
+    
+    "content_table_title": "جدول المحتوى",
+    "content_table": "هنا بتشوف كل المحتوى في النظام. تقدر تفلتر حسب نوع اللعبة، تدور على محتوى معين، أو تشوف الحالة. كل صف بيمثل قطعة محتوى واحدة زي سؤال أو عبارة.",
+    
+    "content_gameType_title": "نوع اللعبة",
+    "content_gameType": "كليكا فيها 3 أنواع ألعاب: 'مين فينا؟' للأسئلة الاجتماعية، 'موافق/مش موافق' للعبارات اللي الناس بتتفق أو تختلف معاها، و'خمن الشخص' للألغاز عن أشخاص مشهورين.",
+    
+    "content_difficulty_title": "مستوى الصعوبة/العمق",
+    "content_difficulty": "المحتوى متقسم لـ5 مستويات: L0 (كسر جليد) للأسئلة الخفيفة جداً، L1 (خفيف) للأسئلة البسيطة، L2 (متوسط) للأسئلة العادية، L3 (عميق) للأسئلة الشخصية، L4 (حار) للأسئلة الجريئة جداً.",
+    
+    "campaigns_sov_title": "نسبة الظهور (SOV)",
+    "campaigns_sov": "Share of Voice - دي النسبة المئوية من إجمالي مرات ظهور الإعلانات اللي الحملة دي هتاخدها. يعني لو عندك 3 حملات بـ SOV 50%، 30%، 20%، الأولى هتظهر نص الوقت.",
+    
+    "campaigns_dailyCap_title": "الحد اليومي",
+    "campaigns_dailyCap": "أقصى عدد مرات ممكن الحملة تظهر فيها في اليوم الواحد. ده بيساعدك تتحكم في الميزانية وتوزع الإعلانات على مدار فترة الحملة.",
+    
+    "campaigns_targeting_title": "الاستهداف",
+    "campaigns_targeting": "تقدر تستهدف المستخدمين حسب المكان (دول، مدن) واللغة. كمان تقدر تحدد أيام معينة في الأسبوع وساعات معينة في اليوم (Dayparting).",
+    
+    "analytics_dau_title": "المستخدمين النشطين يومياً (DAU)",
+    "analytics_dau": "عدد المستخدمين الفريدين اللي استخدموا التطبيق في يوم معين. ده مؤشر مهم جداً لصحة التطبيق ومستوى التفاعل. بيتحسب مرة واحدة لكل مستخدم حتى لو فتح التطبيق كذا مرة.",
+    
+    "analytics_retention_title": "معدل الاحتفاظ",
+    "analytics_retention": "نسبة المستخدمين اللي بيرجعوا يستخدموا التطبيق بعد فترة معينة. مثلاً، احتفاظ اليوم الأول 80% يعني 80% من اللي نزلوا التطبيق رجعوا تاني يوم.",
+    
+    "analytics_sessionTime_title": "متوسط وقت الجلسة",
+    "analytics_sessionTime": "متوسط الوقت اللي المستخدم بيقضيه في الجلسة الواحدة بالدقائق. وقت أطول معناه تفاعل أحسن، بس لازم يكون متوازن عشان ميبقاش مرهق.",
+    
+    "users_consents_title": "الموافقات",
+    "users_consents": "المستخدمين بيوافقوا على حاجتين: 'المكان' عشان نعرف هما فين ونقدم محتوى مناسب، و'الإعلانات' عشان نعرض إعلانات مخصصة. GDPR بيطلب الموافقات دي.",
+    
+    "users_role_title": "أدوار المستخدمين",
+    "users_role": "كل مستخدم ليه دور: 'مدير' يقدر يعمل كل حاجة، 'محرر' يقدر يضيف ويعدل محتوى، 'مراجع' يقدر يوافق أو يرفض المحتوى، 'محلل' يقدر يشوف التقارير بس.",
+    
+    "sessions_duration_title": "مدة الجلسة",
+    "sessions_duration": "الوقت من أول ما المستخدم يفتح التطبيق لحد ما يقفله أو يسيبه فترة طويلة. الجلسات الطويلة معناها المستخدمين مستمتعين، القصيرة ممكن تكون مشكلة.",
+    
+    "rounds_decisions_title": "قرارات الجولة",
+    "rounds_decisions": "في كل جولة، المستخدم بياخد قرار: 'التالي' يعني كمّل، 'تخطى' يعني مش عايز يجاوب، 'موافق/مش موافق' في لعبة العبارات، 'صح/غلط' في لعبة التخمين.",
+    
+    "featureFlags_rollout_title": "نسبة التفعيل",
+    "featureFlags_rollout": "النسبة المئوية من المستخدمين اللي هيشوفوا الخاصية الجديدة. مفيد للتجربة التدريجية - ممكن تبدأ بـ10% وتزود لو كل حاجة تمام.",
+    
+    "featureFlags_audience_title": "بناء الجمهور",
+    "featureFlags_audience": "تقدر تحدد مين يشوف الخاصية حسب: الدولة، اللغة، الدور، عدد الجلسات، أو الموافقات. ده بيخليك تجرب على مجموعة معينة الأول.",
+    
+    "exposure_overexposed_title": "المحتوى المفرط",
+    "exposure_overexposed": "لما نفس المستخدم يشوف نفس المحتوى كتير أوي. ممكن يخلي التجربة مملة. العتبة الافتراضية 5 مرات، بس تقدر تغيرها.",
+    
+    "retention_cohort_title": "مجموعات الاحتفاظ",
+    "retention_cohort": "مجموعة من المستخدمين اللي بدأوا يستخدموا التطبيق في نفس الأسبوع أو الشهر. بنتابعهم عشان نشوف كام % منهم رجع بعد يوم، أسبوع، شهر، إلخ.",
+    
+    "locations_geoConsent_title": "موافقة المكان",
+    "locations_geoConsent": "نسبة المستخدمين اللي وافقوا نعرف مكانهم. مهم للاستهداف الجغرافي والمحتوى المحلي. بدون الموافقة دي، مش هنعرف البلد أو المدينة.",
+    
+    "deviceAnalytics_crossDevice_title": "المستخدمين عبر الأجهزة",
+    "deviceAnalytics_crossDevice": "المستخدمين اللي بيستخدموا التطبيق على أكتر من جهاز (موبايل وتابلت مثلاً). مهم تتأكد إن التجربة كويسة على كل الأجهزة والبيانات بتتزامن صح.",
+    
+    "apiTest_responseTime_title": "وقت الاستجابة",
+    "apiTest_responseTime": "الوقت بالميللي ثانية اللي الخادم بياخده عشان يرد على الطلب. أقل من 200ms ممتاز (أخضر)، 200-500ms مقبول (أصفر)، أكتر من 500ms بطيء (أحمر).",
+    
+    "apiTest_rls_title": "أخطاء RLS",
+    "apiTest_rls": "Row Level Security - نظام أمان في Supabase بيتحكم مين يقدر يشوف أو يعدل أي صف. لو في خطأ، يبقى المستخدم معندوش صلاحية للبيانات دي.",
+    
+    "dashboard": {
+      "stats": {
+        "totalUsers": "عدد اليوزرز اللي مسجلين في الأبليكيشن بتاعك كلهم",
+        "totalUsers_title": "كل اليوزرز",
+        "sessionsToday": "عدد الجلسات اللي اتفتحت النهاردة بس",
+        "sessionsToday_title": "جلسات النهاردة",
+        "activeContent": "المحتوى اللي شغال دلوقتي والناس تقدر تشوفه",
+        "activeContent_title": "المحتوى الشغال",
+        "activeCampaigns": "الحملات الإعلانية اللي شغالة دلوقتي",
+        "activeCampaigns_title": "الحملات الشغالة"
+      },
+      "recentSessions": "بيوريك آخر جلسات اتلعبت مع تفاصيل اليوزر والوقت",
+      "recentSessions_title": "آخر الجلسات",
+      "topContent": "أكتر محتوى الناس بتحبه وبتتفاعل معاه",
+      "topContent_title": "أحسن محتوى"
+    },
+    "content": {
+      "columns": {
+        "content": "السؤال أو العبارة أو اسم الشخص للعبة",
+        "content_title": "نص المحتوى",
+        "game": "اللعبة اللي المحتوى ده تبعها",
+        "game_title": "نوع اللعبة",
+        "difficulty": "مستوى الصعوبة من L0 (سهل خالص) لـ L4 (صعب موت)",
+        "difficulty_title": "مستوى الصعوبة",
+        "tags": "كلمات مفتاحية عشان تساعد في البحث والتصنيف",
+        "tags_title": "التاجز",
+        "status": "المحتوى ده شغال ولا متوقف",
+        "status_title": "حالة المحتوى",
+        "actions": "عدّل أو امسح المحتوى",
+        "actions_title": "الأكشنز"
+      },
+      "export": "نزّل المحتوى كله في ملف CSV",
+      "export_title": "صدّر البيانات",
+      "addContent": "اعمل أسئلة أو محتوى جديد للألعاب",
+      "addContent_title": "ضيف محتوى جديد"
+    },
+    "campaigns": {
+      "columns": {
+        "campaignName": "اسم الحملة الإعلانية",
+        "campaignName_title": "اسم الحملة",
+        "status": "الحملة شغالة ولا متوقفة ولا لسه مسودة",
+        "status_title": "حالة الحملة",
+        "budget": "فلوس الحملة في اليوم الواحد",
+        "budget_title": "الميزانية اليومية",
+        "sov": "نسبة الإعلانات اللي الحملة دي هتاخدها",
+        "sov_title": "نسبة SOV",
+        "dates": "الحملة هتبدأ وتخلص امتى",
+        "dates_title": "تواريخ الحملة",
+        "targeting": "مين اللي هيشوف الإعلانات دي",
+        "targeting_title": "الاستهداف",
+        "actions": "عدّل الإعلانات أو الإعدادات أو امسح الحملة",
+        "actions_title": "أكشنز الحملة"
+      },
+      "stats": {
+        "total": "عدد كل الحملات اللي اتعملت",
+        "total_title": "كل الحملات",
+        "active": "الحملات اللي شغالة دلوقتي",
+        "active_title": "الحملات الشغالة", 
+        "dailyCap": "مجموع الفلوس اللي بتتصرف كل يوم",
+        "dailyCap_title": "إجمالي الصرف اليومي",
+        "avgSOV": "متوسط نسبة الـ SOV",
+        "avgSOV_title": "متوسط SOV"
+      }
+    },
+    "analytics": {
+      "stats": {
+        "activeUsers": "اليوزرز اللي لعبوا ولو لعبة واحدة النهاردة",
+        "activeUsers_title": "اليوزرز النشطين",
+        "totalRounds": "عدد كل الجولات اللي اتلعبت",
+        "totalRounds_title": "كل الجولات",
+        "avgSessionTime": "متوسط وقت الجلسة الواحدة",
+        "avgSessionTime_title": "وقت الجلسة",
+        "totalContent": "عدد كل المحتوى اللي في الداتابيز",
+        "totalContent_title": "كل المحتوى"
+      },
+      "charts": {
+        "sessionsOverTime": "شكل الجلسات بتزيد ولا بتقل مع الوقت",
+        "sessionsOverTime_title": "ترند الجلسات",
+        "gameDistribution": "كل لعبة اتلعبت قد إيه",
+        "gameDistribution_title": "توزيع الألعاب"
+      },
+      "adDelivery": {
+        "totalImpressions": "عدد المرات اللي الإعلانات ظهرت للناس",
+        "totalImpressions_title": "مرات الظهور",
+        "uniqueUsers": "عدد الناس المختلفة اللي شافوا الإعلانات",
+        "uniqueUsers_title": "المشاهدين",
+        "activeCampaigns": "عدد الحملات اللي شغالة دلوقتي",
+        "activeCampaigns_title": "الحملات الشغالة"
+      }
+    },
+    "users": {
+      "columns": {
+        "user": "اسم اليوزر ومعلوماته الشخصية",
+        "user_title": "بروفايل اليوزر",
+        "userId": "الرقم المميز لليوزر",
+        "userId_title": "رقم اليوزر",
+        "role": "صلاحيات اليوزر في النظام",
+        "role_title": "دور اليوزر",
+        "createdAt": "اليوزر ده اتسجل امتى",
+        "createdAt_title": "تاريخ التسجيل",
+        "actions": "عدّل بيانات اليوزر أو صلاحياته",
+        "actions_title": "أكشنز اليوزر"
+      },
+      "tabs": {
+        "adminUsers": "اليوزرز اللي ليهم صلاحيات إدارية",
+        "adminUsers_title": "الأدمنز",
+        "appUsers": "اليوزرز العاديين اللي بيلعبوا بس",
+        "appUsers_title": "يوزرز الأبليكيشن"
+      }
+    },
+    "nav": {
+      "home": "الصفحة الرئيسية فيها كل المعلومات المهمة",
+      "home_title": "الرئيسية",
+      "content": "تقدر تضيف وتعدل الأسئلة والمحتوى للألعاب",
+      "content_title": "إدارة المحتوى",
+      "contentpacks": "اجمع المحتوى في باقات مخصصة",
+      "contentpacks_title": "باقات المحتوى",
+      "review": "راجع المحتوى الجديد ووافق عليه أو ارفضه",
+      "review_title": "مراجعة المحتوى",
+      "sessions": "شوف كل الجلسات اللي حصلت",
+      "sessions_title": "جلسات اللعب",
+      "deviceanalytics": "شوف الناس بتلعب من موبايلات ولا كمبيوترات",
+      "deviceanalytics_title": "تحليلات الأجهزة",
+      "rounds": "تفاصيل كل جولة اتلعبت",
+      "rounds_title": "تحليلات الجولات",
+      "locations": "الناس بتلعب من أنهي بلاد",
+      "locations_title": "أماكن اليوزرز",
+      "retention": "الناس بترجع تلعب تاني ولا لأ",
+      "retention_title": "تحليل الاحتفاظ",
+      "exposure": "متابعة المحتوى عشان ميتكررش كتير",
+      "exposure_title": "تكرار المحتوى",
+      "campaigns": "اعمل وشغّل الحملات الإعلانية",
+      "campaigns_title": "الحملات الإعلانية",
+      "analytics": "كل التحليلات والإحصائيات",
+      "analytics_title": "لوحة التحليلات",
+      "users": "تحكم في اليوزرز وصلاحياتهم",
+      "users_title": "إدارة اليوزرز",
+      "settings": "إعدادات النظام كله",
+      "settings_title": "الإعدادات",
+      "featureflags": "شغّل أو قفل المميزات الجديدة",
+      "featureflags_title": "مميزات تجريبية",
+      "apitest": "اختبر الـ API والاتصال بالسيرفر",
+      "apitest_title": "اختبار API"
+    }
+  }
+}

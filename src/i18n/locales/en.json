@@ -1,0 +1,941 @@
+{
+  "nav": {
+    "home": "Home",
+    "content": "Content",
+    "contentPacks": "Content Packs",
+    "review": "Review",
+    "sessions": "Sessions",
+    "deviceAnalytics": "Device Analytics",
+    "rounds": "Round Analytics",
+    "locations": "User Locations",
+    "retention": "Retention",
+    "exposure": "Exposure",
+    "campaigns": "Campaigns",
+    "analytics": "Analytics",
+    "users": "Users",
+    "settings": "Settings",
+    "featureFlags": "Feature Flags",
+    "apiTest": "API Test",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome to CLIKA Dashboard",
+    "stats": {
+      "totalUsers": "Total Users",
+      "sessionsToday": "Sessions Today",
+      "activeContent": "Active Content",
+      "activeCampaigns": "Active Campaigns"
+    },
+    "fromYesterday": "from yesterday",
+    "recentSessions": "Recent Sessions",
+    "topContent": "Top Content",
+    "sessionActivity": "Session activity will appear here",
+    "popularContent": "Popular content will appear here"
+  },
+  "content": {
+    "title": "Content Management",
+    "subtitle": "Manage game content and questions",
+    "addContent": "Add Content",
+    "reviewQueue": "Review Queue",
+    "contentPacks": "Content Packs",
+    "export": "Export",
+    "search": "Search content, tags, or game type...",
+    "allGames": "All Games",
+    "tableHeaders": {
+      "content": "Content",
+      "game": "Game",
+      "difficulty": "Depth/Difficulty",
+      "tags": "Tags",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "draft": "Draft",
+      "inReview": "In Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "live": "Live",
+      "paused": "Paused",
+      "archived": "Archived"
+    },
+    "form": {
+      "editContent": "Edit Content",
+      "createContent": "Create Content",
+      "gameType": "Game Type",
+      "question": "Question",
+      "questionAr": "Question (Arabic)",
+      "questionEn": "Question (English)",
+      "statement": "Statement",
+      "statementAr": "Statement (Arabic)",
+      "statementEn": "Statement (English)",
+      "personName": "Person Name",
+      "difficulty": "Difficulty/Depth",
+      "clues": "Clues",
+      "tags": "Tags (comma separated)",
+      "tagsPlaceholder": "e.g., fun, social, icebreaker",
+      "similarityGroup": "Similarity Group",
+      "similarityPlaceholder": "Optional grouping for similar content",
+      "active": "Active",
+      "status": "Status"
+    },
+    "levels": {
+      "0": "L0 - Icebreaker",
+      "1": "L1 - Light",
+      "2": "L2 - Medium",
+      "3": "L3 - Deep",
+      "4": "L4 - Spicy"
+    },
+    "games": {
+      "who_among_us": "Who Among Us?",
+      "agree_disagree": "Agree/Disagree",
+      "guess_the_person": "Guess the Person"
+    },
+    "noContent": "No content found",
+    "noMatch": "No content matches your search",
+    "noTags": "No tags",
+    "deleteConfirm": {
+      "title": "Delete Content",
+      "message": "Are you sure you want to delete this {{game}} content? This action cannot be undone.",
+      "confirmText": "Delete"
+    },
+    "bulkActions": {
+      "activate": {
+        "title": "Activate Content",
+        "message": "Are you sure you want to activate {{count}} item(s)?",
+        "confirmText": "Activate"
+      },
+      "deactivate": {
+        "title": "Deactivate Content",
+        "message": "Are you sure you want to deactivate {{count}} item(s)?",
+        "confirmText": "Deactivate"
+      },
+      "delete": {
+        "title": "Delete Content",
+        "message": "Are you sure you want to delete {{count}} item(s)? This action cannot be undone.",
+        "confirmText": "Delete"
+      }
+    },
+    "toast": {
+      "created": "New content added",
+      "updated": "Content updated",
+      "deleted": "Content deleted",
+      "activated": "Activated {{count}} item(s)",
+      "deactivated": "Deactivated {{count}} item(s)",
+      "bulkDeleted": "Deleted {{count}} item(s)"
+    }
+  },
+  "contentReview": {
+    "title": "Content Review",
+    "subtitle": "Review and approve content submissions",
+    "reviewGuidelines": "Review Guidelines",
+    "noContent": "No content to review in this category",
+    "toast": {
+      "approved": "Content approved",
+      "rejected": "Content rejected",
+      "changesRequested": "Changes requested"
+    }
+  },
+  "sessions": {
+    "title": "Sessions & Rounds",
+    "subtitle": "Track game sessions and player activity",
+    "filters": {
+      "allGames": "All Games",
+      "last24Hours": "Last 24 hours",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "allTime": "All time"
+    },
+    "stats": {
+      "totalSessions": "Total Sessions",
+      "activeSessions": "Active Sessions",
+      "avgDuration": "Avg Duration",
+      "mostPlayed": "Most Played"
+    },
+    "gameDistribution": "Game Distribution",
+    "recentSessions": "Recent Sessions",
+    "tableHeaders": {
+      "sessionId": "Session ID",
+      "user": "User",
+      "game": "Game",
+      "started": "Started",
+      "duration": "Duration",
+      "rounds": "Rounds",
+      "status": "Status"
+    },
+    "status": {
+      "active": "Active",
+      "ended": "Ended"
+    },
+    "loading": "Loading sessions...",
+    "noSessions": "No sessions found",
+    "noMatch": "No sessions match your search",
+    "search": "Search sessions by ID, user, or game...",
+    "export": "Export Sessions",
+    "durationFormat": "{{duration}}m",
+    "roundsFormat": "{{count}} rounds"
+  },
+  "campaigns": {
+    "title": "Ad Campaigns",
+    "subtitle": "Manage advertising campaigns and creatives",
+    "create": "Create",
+    "export": "Export",
+    "search": "Search campaigns, status, or targeting...",
+    "tableHeaders": {
+      "campaignName": "Campaign Name",
+      "status": "Status",
+      "budget": "Budget",
+      "sov": "SOV %",
+      "startDate": "Start Date",
+      "targeting": "Targeting",
+      "actions": "Actions"
+    },
+    "stats": {
+      "total": "Total Campaigns",
+      "active": "Active Campaigns",
+      "dailyCap": "Total Daily Cap",
+      "avgSOV": "Avg SOV"
+    },
+    "form": {
+      "editCampaign": "Edit Campaign",
+      "createCampaign": "Create Campaign",
+      "campaignName": "Campaign Name",
+      "status": "Status",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "dailyCap": "Daily Cap",
+      "dailyCapPlaceholder": "e.g., 1000",
+      "sovPercent": "SOV %",
+      "sovPlaceholder": "e.g., 25",
+      "priority": "Priority",
+      "geoScope": "Geo Scope",
+      "language": "Language",
+      "global": "Global",
+      "country": "Country",
+      "city": "City",
+      "region": "Region",
+      "all": "All"
+    },
+    "statuses": {
+      "active": "Active",
+      "paused": "Paused",
+      "ended": "Ended",
+      "draft": "Draft"
+    },
+    "targeting": {
+      "noTargeting": "No targeting",
+      "global": "Global",
+      "to": "to"
+    },
+    "deleteConfirm": {
+      "title": "Delete Campaign",
+      "message": "Are you sure you want to delete the campaign \"{{name}}\"? This action cannot be undone.",
+      "confirmText": "Delete Campaign"
+    },
+    "bulkActions": {
+      "activate": {
+        "title": "Activate Campaigns",
+        "message": "Are you sure you want to activate {{count}} campaign(s)?",
+        "confirmText": "Activate"
+      },
+      "pause": {
+        "title": "Pause Campaigns",
+        "message": "Are you sure you want to pause {{count}} campaign(s)?",
+        "confirmText": "Pause"
+      },
+      "delete": {
+        "title": "Delete Campaigns",
+        "message": "Are you sure you want to delete {{count}} campaign(s)? This action cannot be undone.",
+        "confirmText": "Delete"
+      }
+    },
+    "toast": {
+      "created": "New campaign created",
+      "updated": "Campaign updated",
+      "deleted": "Campaign deleted",
+      "activated": "Activated {{count}} campaign(s)",
+      "paused": "Paused {{count}} campaign(s)",
+      "bulkDeleted": "Deleted {{count}} campaign(s)"
+    },
+    "loading": "Loading...",
+    "error": "Error",
+    "noCampaigns": "No campaigns found. Create your first campaign to get started.",
+    "noMatch": "No campaigns match your search",
+    "manageCreatives": "Manage Creatives"
+  },
+  "adCreative": {
+    "title": "Ad Creatives for {{campaign}}",
+    "subtitle": "Manage multi-language ad text and creative settings",
+    "create": "Add Creative",
+    "noCreatives": "No creatives for this campaign yet",
+    "noText": "No text",
+    "form": {
+      "arabicText": "Arabic Text",
+      "englishText": "English Text",
+      "textLine": "Text Line {{number}}",
+      "textLinePlaceholder": "Enter text line {{number}}",
+      "primaryLanguage": "Primary Language",
+      "primaryLanguageHelp": "Select the primary language for this creative",
+      "link": "Link URL",
+      "linkPlaceholder": "https://example.com",
+      "active": "Active"
+    },
+    "languages": {
+      "arabic": "Arabic",
+      "english": "English"
+    },
+    "deleteConfirm": {
+      "title": "Delete Creative",
+      "message": "Are you sure you want to delete this ad creative?",
+      "confirmText": "Delete"
+    },
+    "bulkActions": {
+      "delete": {
+        "title": "Delete Creatives",
+        "message": "Are you sure you want to delete {{count}} creative(s)?",
+        "confirmText": "Delete"
+      }
+    },
+    "toast": {
+      "activated": "Activated {{count}} creative(s)",
+      "deactivated": "Deactivated {{count}} creative(s)",
+      "bulkDeleted": "Deleted {{count}} creative(s)"
+    },
+    "errors": {
+      "noText": "Please enter text for at least the primary language"
+    }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Game performance and user insights",
+    "filters": {
+      "last24Hours": "Last 24 hours",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "last90Days": "Last 90 days"
+    },
+    "stats": {
+      "activeUsers": "Active Users",
+      "totalRounds": "Total Rounds",
+      "avgSessionTime": "Avg Session Time",
+      "totalContent": "Total Content"
+    },
+    "charts": {
+      "sessionsOverTime": "Sessions Over Time",
+      "sessions": "Sessions",
+      "gameDistribution": "Game Distribution",
+      "contentByStatus": "Content by Status",
+      "gamePerformance": "Game Performance",
+      "noData": "No data"
+    },
+    "adDelivery": {
+      "title": "Ad Delivery Analytics",
+      "totalImpressions": "Total Impressions",
+      "uniqueUsers": "Unique Users",
+      "activeCampaigns": "Active Campaigns",
+      "campaignPerformance": "Campaign Performance",
+      "impressions": "impressions"
+    },
+    "dau": {
+      "title": "Daily Active Users",
+      "last7Days": "Last 7 days",
+      "last14Days": "Last 14 days",
+      "last30Days": "Last 30 days",
+      "currentDAU": "Today's DAU",
+      "avgDAU": "Average DAU",
+      "newVsReturning": "New vs Returning",
+      "totalUsers": "Total Users",
+      "newUsers": "New Users",
+      "returningUsers": "Returning Users",
+      "noData": "No daily active user data available"
+    },
+    "loading": "Loading analytics...",
+    "minutes": "min",
+    "rounds": "rounds",
+    "unknown": "Unknown"
+  },
+  "users": {
+    "title": "User Management",
+    "subtitle": "Manage user accounts and permissions",
+    "create": "Create",
+    "export": "Export",
+    "search": "Search users by name, role, or ID...",
+    "tableHeaders": {
+      "user": "User",
+      "userId": "User ID",
+      "country": "Country",
+      "role": "Role",
+      "consents": "Consents",
+      "joined": "Joined",
+      "updated": "Updated",
+      "createdAt": "Created",
+      "actions": "Actions"
+    },
+    "tabs": {
+      "adminUsers": "Admin Users",
+      "appUsers": "App Users"
+    },
+    "noUsers": "No users found",
+    "noMatch": "No users match your search",
+    "unknownUser": "Unknown User",
+    "na": "N/A",
+    "geo": "Geo",
+    "ads": "Ads",
+    "yes": "Yes",
+    "no": "No",
+    "unknown": "Unknown",
+    "noRole": "No role",
+    "roles": {
+      "user": "User",
+      "editor": "Editor",
+      "reviewer": "Reviewer",
+      "admin": "Admin",
+      "advertiser": "Advertiser",
+      "analyst": "Analyst"
+    },
+    "roleDescriptions": {
+      "admin": "Full system access",
+      "editor": "Can manage content and campaigns",
+      "reviewer": "Can review and approve content",
+      "user": "View-only access"
+    },
+    "form": {
+      "createUser": "Create User",
+      "updateUser": "Update User",
+      "displayName": "Display Name",
+      "displayNamePlaceholder": "John Doe",
+      "role": "Role",
+      "saving": "Saving...",
+      "cancel": "Cancel"
+    },
+    "toast": {
+      "created": "New user added",
+      "updated": "User updated",
+      "deleted": "User removed"
+    },
+    "errors": {
+      "createAuth": "Creating new users requires admin access to authentication system"
+    },
+    "loading": "Loading...",
+    "error": "Error"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure game settings, feature flags, and system parameters",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "tabs": {
+      "game": "Game Configuration",
+      "features": "Feature Flags",
+      "system": "System Settings"
+    },
+    "games": {
+      "who_among_us": "Who Among Us?",
+      "agree_disagree": "Agree/Disagree",
+      "guess_the_person": "Guess the Person"
+    },
+    "gameConfig": {
+      "enableGame": "Enable game",
+      "explorationPercent": "Exploration %",
+      "explorationTooltip": "Percentage of new content to explore",
+      "maxL4": "Max L4 Questions",
+      "maxL4Tooltip": "Maximum number of L4 questions per session",
+      "cooldownHours": "Cooldown Hours",
+      "cooldownTooltip": "Hours before content can be repeated"
+    },
+    "featureFlags": {
+      "audience": "Audience",
+      "percentage": "{{percent}}%"
+    },
+    "system": {
+      "title": "System Configuration",
+      "sessionTimeout": "Session Timeout (minutes)",
+      "maxConcurrentSessions": "Max Concurrent Sessions",
+      "dataRetentionDays": "Data Retention (days)",
+      "enableAnalytics": "Enable Analytics"
+    },
+    "loading": "Loading..."
+  },
+  "login": {
+    "title": "Sign in to your account",
+    "email": "Email address",
+    "emailPlaceholder": "admin@clika.com",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot your password?",
+    "signIn": "Sign in",
+    "signingIn": "Signing in...",
+    "signingUp": "Creating account...",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "signUp": "Sign up",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithGithub": "Continue with GitHub",
+    "orContinueWith": "Or continue with email",
+    "errors": {
+      "emailRequired": "Email is required",
+      "invalidEmail": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordLength": "Password must be at least 8 characters",
+      "accountExists": "An account with this email already exists",
+      "loginFailed": "Failed to sign in",
+      "signupFailed": "Failed to sign up"
+    },
+    "success": {
+      "accountCreated": "Account created! Please check your email to verify your account.",
+      "welcomeBack": "Welcome back!"
+    },
+    "defaultRole": "reviewer",
+    "termsText": "By signing in, you agree to our Terms of Service and Privacy Policy"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "actions": "Actions",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "na": "N/A",
+    "unknown": "Unknown",
+    "all": "All",
+    "none": "None",
+    "select": "Select",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "view": "View",
+    "download": "Download",
+    "upload": "Upload",
+    "share": "Share",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "date": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "thisWeek": "This Week",
+      "lastWeek": "Last Week",
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month",
+      "custom": "Custom"
+    }
+  },
+  "bulk": {
+    "selected": "{{count}} selected",
+    "selectAll": "Select all",
+    "deselectAll": "Deselect all",
+    "actions": {
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "delete": "Delete",
+      "pause": "Pause",
+      "export": "Export",
+      "bulkEdit": "Bulk Edit"
+    }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "items": "items",
+    "itemsPerPage": "Items per page",
+    "showing": "Showing {{from}} to {{to}} of {{total}} results"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must be no more than {{max}} characters",
+    "minValue": "Must be at least {{min}}",
+    "maxValue": "Must be no more than {{max}}",
+    "pattern": "Invalid format",
+    "unique": "This value already exists",
+    "passwordMatch": "Passwords do not match"
+  },
+  "confirmDialog": {
+    "defaultTitle": "Confirm Action",
+    "defaultMessage": "Are you sure you want to continue?",
+    "defaultConfirm": "Confirm",
+    "defaultCancel": "Cancel"
+  },
+  "contentPacks": {
+    "title": "Content Packs",
+    "subtitle": "Manage content packs and bundles",
+    "create": "Create Pack",
+    "createPack": "Create Content Pack",
+    "editPack": "Edit Content Pack",
+    "search": "Search packs by name, game, or tags...",
+    "noPacks": "No content packs found. Create your first pack to get started.",
+    "noMatch": "No packs match your search",
+    "itemCount": "{{count}} items",
+    "manageItems": "Manage Items",
+    "itemsInPack": "Items in pack ({{count}})",
+    "addItems": "Add Items",
+    "selectItemsToAdd": "Select items to add",
+    "addSelected": "Add {{count}} selected",
+    "noAvailableItems": "No available items for this game",
+    "noItemsInPack": "No items in this pack yet",
+    "form": {
+      "packName": "Pack Name",
+      "packNamePlaceholder": "Summer 2024 Collection",
+      "selectGame": "Select a game",
+      "tagsPlaceholder": "summer, fun, egyptian",
+      "status": "Status"
+    },
+    "deleteConfirm": {
+      "title": "Delete Content Pack",
+      "message": "Are you sure you want to delete the pack \"{{name}}\"? This action cannot be undone.",
+      "confirmText": "Delete Pack"
+    },
+    "toast": {
+      "created": "Content pack created",
+      "updated": "Content pack updated",
+      "deleted": "Content pack deleted",
+      "itemsAdded": "Items added to pack",
+      "itemRemoved": "Item removed from pack"
+    }
+  },
+  "rounds": {
+    "title": "Round Analytics",
+    "subtitle": "Analyze round outcomes and game completion times",
+    "filters": {
+      "allGames": "All Games",
+      "last24Hours": "Last 24 hours",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "allTime": "All time"
+    },
+    "stats": {
+      "totalRounds": "Total Rounds",
+      "uniqueSessions": "Unique Sessions",
+      "avgDuration": "Avg Duration",
+      "completionRate": "Completion Rate"
+    },
+    "charts": {
+      "timeDistribution": "Round Duration Distribution",
+      "decisionBreakdown": "Player Decisions",
+      "gameDistribution": "Rounds by Game",
+      "roundDuration": "Round Duration",
+      "roundsByGame": "Rounds by Game"
+    },
+    "recentRounds": "Recent Rounds",
+    "tableHeaders": {
+      "roundId": "Round ID",
+      "game": "Game",
+      "duration": "Duration",
+      "decision": "Decision",
+      "time": "Time"
+    },
+    "decisions": {
+      "next": "Next",
+      "skip": "Skip",
+      "agree": "Agree",
+      "disagree": "Disagree",
+      "correct": "Correct",
+      "wrong": "Wrong"
+    },
+    "noRounds": "No rounds found for the selected filters"
+  },
+  "userLocation": {
+    "title": "User Location Dashboard",
+    "subtitle": "Geographic distribution and consent statistics",
+    "stats": {
+      "totalUsers": "Total Users",
+      "withLocation": "With Location",
+      "geoConsent": "Geo Consent",
+      "adsConsent": "Ads Consent",
+      "ofTotal": "of total",
+      "consented": "consented"
+    },
+    "charts": {
+      "consentTrends": "Consent Trends (30 days)",
+      "countryDistribution": "Country Distribution",
+      "geoConsent": "Location Consent",
+      "adsConsent": "Ads Consent"
+    },
+    "usersList": "User Location Details",
+    "showOnlyWithLocation": "Show only users with location",
+    "tableHeaders": {
+      "user": "User",
+      "country": "Country",
+      "lastLocation": "Last Location Update",
+      "geoConsent": "Geo Consent",
+      "adsConsent": "Ads Consent"
+    },
+    "noData": "No data available",
+    "noLocationData": "No location data available yet",
+    "noUsers": "No users found",
+    "noUsersWithLocation": "No users with location data"
+  },
+  "retention": {
+    "title": "Retention Cohorts",
+    "subtitle": "Track user retention over time",
+    "cohortSize": "Cohort Size",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "stats": {
+      "avgDay1": "Avg Day 1",
+      "avgDay7": "Avg Day 7",
+      "avgDay30": "Avg Day 30",
+      "totalUsers": "Total Users"
+    },
+    "bestCohort": "Best Performing Cohort",
+    "bestCohortDesc": "The cohort from {{date}} achieved {{retention}}% 7-day retention",
+    "cohortAnalysis": "Cohort Analysis",
+    "tableHeaders": {
+      "cohort": "Cohort",
+      "users": "Users",
+      "day0": "Day 0",
+      "day1": "Day 1",
+      "day7": "Day 7",
+      "day14": "Day 14",
+      "day30": "Day 30"
+    },
+    "legend": "Retention Rate Legend",
+    "noCohorts": "No cohort data available"
+  },
+  "exposure": {
+    "title": "Content Exposure Tracker",
+    "subtitle": "Monitor content visibility and prevent overexposure",
+    "userExposure": "User Content Exposure",
+    "overexposedContent": "Overexposed Content",
+    "selectUser": "Select a user",
+    "selectUserPrompt": "Select a user to view their content exposure",
+    "searchContent": "Search content...",
+    "threshold": "Threshold",
+    "reset": "Reset",
+    "noExposure": "No content exposure data for this user",
+    "noOverexposed": "No overexposed content found",
+    "noResults": "No matching content found",
+    "stats": {
+      "totalUsers": "Total Users",
+      "totalViewed": "Content Viewed",
+      "avgPerUser": "Avg per User",
+      "overexposed": "Overexposed"
+    },
+    "tableHeaders": {
+      "content": "Content",
+      "game": "Game",
+      "seenCount": "Seen Count",
+      "lastSeen": "Last Seen",
+      "exposures": "Total Exposures",
+      "users": "Users",
+      "maxSeen": "Max Seen"
+    },
+    "resetDialog": {
+      "title": "Reset User Exposure",
+      "message": "Are you sure you want to reset all content exposure data for this user? This action cannot be undone.",
+      "confirmText": "Reset Exposure"
+    }
+  },
+  "featureFlags": {
+    "title": "Feature Flags",
+    "subtitle": "Control feature rollouts with audience targeting",
+    "create": "Create Flag",
+    "allUsers": "All Users",
+    "invalidAudience": "Invalid audience criteria",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "noFlags": "No feature flags found. Create your first flag to get started.",
+    "countries": "Countries",
+    "minSessions": "Min Sessions",
+    "roles": "Roles",
+    "languages": "Languages",
+    "geoConsent": "Geo Consent",
+    "adsConsent": "Ads Consent",
+    "tableHeaders": {
+      "key": "Feature Key",
+      "status": "Status",
+      "rollout": "Rollout",
+      "audience": "Audience",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "form": {
+      "editTitle": "Edit Feature Flag",
+      "createTitle": "Create Feature Flag",
+      "key": "Feature Key",
+      "rollout": "Rollout Percentage",
+      "audienceBuilder": "Audience Builder",
+      "countries": "Countries (comma separated)",
+      "languages": "Languages (comma separated)",
+      "roles": "User Roles (comma separated)",
+      "minSessions": "Minimum Sessions",
+      "requiredConsents": "Required Consents",
+      "geoConsent": "Location Consent Required",
+      "adsConsent": "Ads Consent Required"
+    },
+    "deleteConfirm": {
+      "title": "Delete Feature Flag",
+      "message": "Are you sure you want to delete the feature flag \"{{key}}\"? This action cannot be undone.",
+      "confirmText": "Delete Flag"
+    }
+  },
+  "help": {
+    "dashboard": {
+      "stats": {
+        "totalUsers": "Total number of registered users in your application",
+        "totalUsers_title": "Total Users",
+        "sessionsToday": "Number of active game sessions started today",
+        "sessionsToday_title": "Today's Sessions",
+        "activeContent": "Content items that are currently available to users",
+        "activeContent_title": "Active Content",
+        "activeCampaigns": "Ad campaigns that are currently running",
+        "activeCampaigns_title": "Active Campaigns"
+      },
+      "recentSessions": "Shows the most recent game sessions with user details and duration",
+      "recentSessions_title": "Recent Sessions",
+      "topContent": "Most popular content items based on user engagement",
+      "topContent_title": "Top Content"
+    },
+    "content": {
+      "columns": {
+        "content": "The question, statement, or person name for the game",
+        "content_title": "Content Text",
+        "game": "Which game type this content belongs to",
+        "game_title": "Game Type",
+        "difficulty": "Difficulty level from L0 (easiest) to L4 (hardest)",
+        "difficulty_title": "Difficulty Level",
+        "tags": "Keywords to help categorize and search content",
+        "tags_title": "Content Tags",
+        "status": "Whether the content is active or inactive",
+        "status_title": "Content Status",
+        "actions": "Edit or delete content items",
+        "actions_title": "Actions"
+      },
+      "export": "Download content data as CSV file",
+      "export_title": "Export Data",
+      "addContent": "Create new questions or content for games",
+      "addContent_title": "Add New Content"
+    },
+    "campaigns": {
+      "columns": {
+        "campaignName": "The name or title of the advertising campaign",
+        "campaignName_title": "Campaign Name",
+        "status": "Current state of the campaign (active, paused, ended, draft)",
+        "status_title": "Campaign Status",
+        "budget": "Daily spending limit for this campaign",
+        "budget_title": "Daily Budget",
+        "sov": "Share of Voice - percentage of ad inventory this campaign should receive",
+        "sov_title": "SOV Percentage",
+        "dates": "Campaign start and end dates",
+        "dates_title": "Campaign Dates",
+        "targeting": "Geographic and language targeting settings",
+        "targeting_title": "Targeting Options",
+        "actions": "Manage creatives, edit settings, or delete campaign",
+        "actions_title": "Campaign Actions"
+      },
+      "stats": {
+        "total": "Total number of campaigns created",
+        "total_title": "All Campaigns",
+        "active": "Campaigns currently delivering ads",
+        "active_title": "Active Campaigns", 
+        "dailyCap": "Combined daily budget across all campaigns",
+        "dailyCap_title": "Total Daily Cap",
+        "avgSOV": "Average Share of Voice percentage",
+        "avgSOV_title": "Average SOV"
+      }
+    },
+    "analytics": {
+      "stats": {
+        "activeUsers": "Users who have played at least one game today",
+        "activeUsers_title": "Active Users",
+        "totalRounds": "Total number of game rounds played",
+        "totalRounds_title": "Total Rounds",
+        "avgSessionTime": "Average duration of game sessions",
+        "avgSessionTime_title": "Session Duration",
+        "totalContent": "Total number of content items in database",
+        "totalContent_title": "Total Content"
+      },
+      "charts": {
+        "sessionsOverTime": "Trend of game sessions over the selected time period",
+        "sessionsOverTime_title": "Session Trends",
+        "gameDistribution": "Breakdown of rounds played by game type",
+        "gameDistribution_title": "Game Distribution"
+      },
+      "adDelivery": {
+        "totalImpressions": "Total number of ads shown to users",
+        "totalImpressions_title": "Ad Impressions",
+        "uniqueUsers": "Number of unique users who saw ads",
+        "uniqueUsers_title": "Unique Viewers",
+        "activeCampaigns": "Number of campaigns currently delivering",
+        "activeCampaigns_title": "Active Campaigns"
+      }
+    },
+    "users": {
+      "columns": {
+        "user": "User's display name and profile information",
+        "user_title": "User Profile",
+        "userId": "Unique identifier for the user",
+        "userId_title": "User ID",
+        "role": "User's permission level in the system",
+        "role_title": "User Role",
+        "createdAt": "When the user account was created",
+        "createdAt_title": "Creation Date",
+        "actions": "Edit user details or permissions",
+        "actions_title": "User Actions"
+      },
+      "tabs": {
+        "adminUsers": "Users with administrative roles (admin, editor, reviewer)",
+        "adminUsers_title": "Admin Users",
+        "appUsers": "Regular app users without special permissions",
+        "appUsers_title": "App Users"
+      }
+    },
+    "nav": {
+      "home": "Main dashboard with key metrics and statistics",
+      "home_title": "Dashboard Home",
+      "content": "Manage questions and content for all games",
+      "content_title": "Content Management",
+      "contentpacks": "Group content into themed packs",
+      "contentpacks_title": "Content Packs",
+      "review": "Review and approve submitted content",
+      "review_title": "Content Review",
+      "sessions": "View active and past game sessions",
+      "sessions_title": "Game Sessions",
+      "deviceanalytics": "Analytics by device type and platform",
+      "deviceanalytics_title": "Device Analytics",
+      "rounds": "Detailed analytics for game rounds",
+      "rounds_title": "Round Analytics",
+      "locations": "User geographic distribution",
+      "locations_title": "User Locations",
+      "retention": "User retention cohort analysis",
+      "retention_title": "Retention Analysis",
+      "exposure": "Track content exposure to prevent repetition",
+      "exposure_title": "Content Exposure",
+      "campaigns": "Manage advertising campaigns",
+      "campaigns_title": "Ad Campaigns",
+      "analytics": "Overall analytics and insights",
+      "analytics_title": "Analytics Dashboard",
+      "users": "Manage user accounts and permissions",
+      "users_title": "User Management",
+      "settings": "Configure system settings",
+      "settings_title": "System Settings",
+      "featureflags": "Control feature rollouts",
+      "featureflags_title": "Feature Flags",
+      "apitest": "Test API endpoints and connectivity",
+      "apitest_title": "API Testing"
+    }
+  }
+}

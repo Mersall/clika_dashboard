@@ -1,73 +1,215 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { Session, User } from '@supabase/supabase-js';
+import { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react';
+import { Session, User, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@services/supabase';
-import { useNavigate } from 'react-router-dom';
 
-interface AuthContextType {
+interface AuthState {
   user: User | null;
   session: Session | null;
-  loading: boolean;
+  isLoading: boolean;
+  isInitialized: boolean;
+  error: AuthError | null;
+}
+
+interface AuthContextType extends AuthState {
   signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, displayName?: string) => Promise<{ needsConfirmation: boolean }>;
   signOut: () => Promise<void>;
-  isAdmin: boolean;
-  isEditor: boolean;
-  isReviewer: boolean;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [authState, setAuthState] = useState<AuthState>({
+    user: null,
+    session: null,
+    isLoading: true,
+    isInitialized: false,
+    error: null,
+  });
 
+  const isInitializedRef = useRef(false);
+
+  // Initialize auth state on mount
   useEffect(() => {
-    // Check active sessions and sets the user
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    let mounted = true;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
+    const initAuth = async () => {
+      try {
+        // Get the current session from Supabase
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) throw error;
+        
+        if (mounted) {
+          isInitializedRef.current = true;
+          setAuthState({
+            user: session?.user ?? null,
+            session: session,
+            isLoading: false,
+            isInitialized: true,
+            error: null,
+          });
+        }
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        if (mounted) {
+          isInitializedRef.current = true;
+          setAuthState({
+            user: null,
+            session: null,
+            isLoading: false,
+            isInitialized: true,
+            error: error as AuthError,
+          });
+        }
+      }
+    };
 
-    return () => subscription.unsubscribe();
+    // Initialize immediately
+    initAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        console.log('Auth state change:', event);
+        
+        // Only update state if initialized and mounted
+        if (mounted && isInitializedRef.current) {
+          setAuthState(prev => ({
+            ...prev,
+            user: session?.user ?? null,
+            session: session,
+            error: null,
+          }));
+        }
+      }
+    );
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) throw error;
-    navigate('/');
+      if (error) {
+        // Check for specific error cases
+        if (error.message === 'Email not confirmed') {
+          throw new Error('Please check your email and confirm your account before signing in.');
+        }
+        throw error;
+      }
+
+      // Check if email is confirmed
+      if (data.user && !data.user.confirmed_at) {
+        // Sign out the unconfirmed user
+        await supabase.auth.signOut();
+        throw new Error('Please confirm your email before signing in. Check your inbox for the confirmation link.');
+      }
+
+      // The session will be handled by onAuthStateChange
+      setAuthState(prev => ({ ...prev, isLoading: false }));
+    } catch (error) {
+      console.error('Sign in error:', error);
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: error as AuthError,
+      }));
+      throw error;
+    }
+  };
+
+  const signUp = async (email: string, password: string, displayName?: string) => {
+    setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
+    
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            display_name: displayName || email.split('@')[0],
+          },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) throw error;
+
+      // Check if email confirmation is required
+      const needsConfirmation = !data.user?.confirmed_at;
+      
+      if (needsConfirmation) {
+        // Sign out to prevent unconfirmed users from accessing the app
+        await supabase.auth.signOut();
+      }
+
+      setAuthState(prev => ({ ...prev, isLoading: false }));
+      
+      return { needsConfirmation };
+    } catch (error) {
+      console.error('Sign up error:', error);
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: error as AuthError,
+      }));
+      throw error;
+    }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    navigate('/login');
+    setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
+    
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      // Clear the session
+      setAuthState({
+        user: null,
+        session: null,
+        isLoading: false,
+        isInitialized: true,
+        error: null,
+      });
+    } catch (error) {
+      console.error('Sign out error:', error);
+      setAuthState(prev => ({
+        ...prev,
+        isLoading: false,
+        error: error as AuthError,
+      }));
+      
+      // Force clear session even if sign out fails
+      setAuthState(prev => ({
+        ...prev,
+        user: null,
+        session: null,
+      }));
+    }
   };
 
-  // Role checks based on user metadata
-  const isAdmin = user?.user_metadata?.role === 'admin';
-  const isEditor = user?.user_metadata?.role === 'editor' || isAdmin;
-  const isReviewer = user?.user_metadata?.role === 'reviewer' || isEditor;
+  const clearError = () => {
+    setAuthState(prev => ({ ...prev, error: null }));
+  };
 
-  const value = {
-    session,
-    user,
-    loading,
+  const value: AuthContextType = {
+    ...authState,
     signIn,
+    signUp,
     signOut,
-    isAdmin,
-    isEditor,
-    isReviewer,
+    clearError,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

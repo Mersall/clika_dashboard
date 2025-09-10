@@ -11,21 +11,27 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\""
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.1.1",
     "@supabase/supabase-js": "^2.57.0",
     "@tanstack/react-query": "^5.86.0",
     "@tanstack/react-table": "^8.16.0",
     "chart.js": "^4.4.2",
     "date-fns": "^3.6.0",
+    "i18next": "^25.5.2",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "playwright": "^1.55.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.51.4",
     "react-hot-toast": "^2.4.1",
+    "react-i18next": "^15.7.3",
     "react-router-dom": "^7.0.2",
     "recharts": "^2.12.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.8.0",

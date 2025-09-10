@@ -3,13 +3,85 @@
 @tailwind utilities;
 
 @layer base {
+  /* Dark mode (default) */
   :root {
-    @apply bg-gray-950 text-gray-100;
+    @apply bg-gray-900;
+    
+    /* CSS Variables for dynamic theming */
+    --color-background: #0F172A;
+    --color-surface: #1E293B;
+    --color-surface-light: #334155;
+    --color-primary: #8dc63f;
+    --color-primary-dark: #7AB332;
+    --color-primary-light: #A0D456;
+    --color-secondary: #ff6b6b;
+    --color-secondary-dark: #E85555;
+    --color-secondary-light: #FF8181;
+    --color-text-primary: #F8FAFC;
+    --color-text-secondary: #CBD5E1;
+    --color-text-tertiary: #94A3B8;
+    --color-border: #334155;
+  }
+
+  /* Light mode */
+  html.light {
+    --color-background: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-surface-light: #F1F5F9;
+    --color-primary: #8dc63f;
+    --color-primary-dark: #7AB332;
+    --color-primary-light: #A0D456;
+    --color-secondary: #ff6b6b;
+    --color-secondary-dark: #E85555;
+    --color-secondary-light: #FF8181;
+    --color-text-primary: #0F172A;
+    --color-text-secondary: #475569;
+    --color-text-tertiary: #64748B;
+    --color-border: #E2E8F0;
+  }
+  
+  html.light body {
+    @apply text-gray-900;
   }
 
   body {
     @apply font-cairo antialiased;
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
   }
+}
+
+/* Global light mode text color fixes */
+.light h1, .light h2, .light h3, .light h4, .light h5, .light h6 {
+  @apply text-gray-900;
+}
+
+.light p {
+  @apply text-gray-800;
+}
+
+.light .text-gray-100 {
+  @apply text-gray-900;
+}
+
+.light .text-gray-200 {
+  @apply text-gray-800;
+}
+
+.light .text-gray-300 {
+  @apply text-gray-700;
+}
+
+.light .text-gray-400 {
+  @apply text-gray-600;
+}
+
+.light .text-gray-500 {
+  @apply text-gray-600;
+}
+
+.light .text-white {
+  @apply text-gray-900;
 }
 
 @layer components {
@@ -18,31 +90,39 @@
   }
 
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+    @apply bg-primary text-white hover:bg-primary-dark focus:ring-primary shadow-md;
   }
 
   .btn-secondary {
-    @apply bg-gray-800 text-gray-100 hover:bg-gray-700 focus:ring-gray-500;
+    @apply bg-secondary text-white hover:bg-secondary-dark focus:ring-secondary shadow-md;
   }
 
   .btn-outline {
-    @apply border border-gray-700 bg-transparent text-gray-100 hover:bg-gray-800 focus:ring-gray-500;
+    @apply border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-white focus:ring-primary;
   }
 
   .btn-danger {
-    @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+    @apply bg-secondary text-white hover:bg-secondary-dark focus:ring-secondary;
+  }
+
+  .btn-success {
+    @apply bg-primary text-white hover:bg-primary-dark focus:ring-primary;
+  }
+
+  .btn-sm {
+    @apply text-sm px-3 py-1.5;
   }
 
   .input {
-    @apply block w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-2 text-gray-100 placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500;
+    @apply block w-full rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary;
   }
 
   .label {
-    @apply block text-sm font-medium text-gray-300;
+    @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
   }
 
   .card {
-    @apply rounded-lg border border-gray-800 bg-gray-900 p-6 shadow-sm;
+    @apply rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md;
   }
 
   .table {
@@ -50,15 +130,15 @@
   }
 
   .table thead {
-    @apply bg-gray-900/50;
+    @apply bg-gray-100 dark:bg-gray-900/50;
   }
 
   .table th {
-    @apply px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-400;
+    @apply px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-700 dark:text-gray-400;
   }
 
   .table td {
-    @apply px-4 py-4 text-sm text-gray-300;
+    @apply px-4 py-4 text-sm text-gray-800 dark:text-gray-300;
   }
 
   .badge {
@@ -66,18 +146,111 @@
   }
 
   .badge-success {
-    @apply bg-green-900/50 text-green-400 ring-1 ring-green-800;
+    @apply bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 ring-1 ring-green-200 dark:ring-green-800;
   }
 
   .badge-warning {
-    @apply bg-yellow-900/50 text-yellow-400 ring-1 ring-yellow-800;
+    @apply bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-400 ring-1 ring-yellow-200 dark:ring-yellow-800;
   }
 
   .badge-danger {
-    @apply bg-red-900/50 text-red-400 ring-1 ring-red-800;
+    @apply bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-400 ring-1 ring-red-200 dark:ring-red-800;
   }
 
   .badge-info {
     @apply bg-blue-900/50 text-blue-400 ring-1 ring-blue-800;
   }
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  font-family: 'Cairo', 'Segoe UI', Tahoma, 'Arial', sans-serif;
+}
+
+/* RTL specific adjustments for layout */
+[dir="rtl"] .flex {
+  direction: rtl;
+}
+
+/* Fix table headers alignment in RTL */
+[dir="rtl"] .table th {
+  text-align: right;
+}
+
+[dir="rtl"] .table td {
+  text-align: right;
+}
+
+[dir="rtl"] .ml-2 {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+[dir="rtl"] .mr-2 {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+[dir="rtl"] .pl-10 {
+  padding-left: 0;
+  padding-right: 2.5rem;
+}
+
+[dir="rtl"] .pl-3 {
+  padding-left: 0;
+  padding-right: 0.75rem;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+[dir="rtl"] .left-0 {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .right-0 {
+  right: auto;
+  left: 0;
+}
+
+/* Additional form element styles for light mode */
+input[type="range"] {
+  @apply accent-primary;
+}
+
+input[type="number"] {
+  @apply rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-gray-900 dark:text-gray-100 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary;
+}
+
+/* Light mode specific overrides */
+.light input[type="checkbox"] {
+  @apply border-gray-300;
+}
+
+.light .toggle-switch {
+  @apply bg-gray-300;
+}
+
+.light .toggle-switch-checked {
+  @apply bg-primary;
+}
+
+/* Improve select dropdown styling */
+.light select {
+  @apply border-gray-300 bg-white text-gray-900;
+}
+
+/* Tab navigation styles */
+.light .tab-active {
+  @apply text-primary border-primary;
+}
+
+.light .tab-inactive {
+  @apply text-gray-600 hover:text-gray-900;
 }

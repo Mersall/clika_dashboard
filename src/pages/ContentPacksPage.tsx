@@ -1,88 +1,126 @@
-import { useState, Fragment, useEffect } from 'react';
+import { useState, useMemo } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useUserRole } from '../hooks/useUserRole';
+import { Navigate } from 'react-router-dom';
+import { 
+  ArchiveBoxIcon, 
+  PlusIcon, 
+  PencilIcon, 
+  TrashIcon,
+  MagnifyingGlassIcon,
+  TagIcon,
+  CubeIcon
+} from '@heroicons/react/24/outline';
+import { Modal } from '../components/ui/Modal';
+import { ConfirmDialog } from '../components/ui/ConfirmDialog';
+import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@services/supabase';
-import { Database } from '@services/supabase';
-import { PlusIcon, PencilIcon, TrashIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
-import { Dialog, Transition } from '@components/ui/Modal';
-import toast from 'react-hot-toast';
+import { supabase } from '../services/supabase';
+import { ContentPackForm } from '../components/content/ContentPackForm';
+import { ContentPackItems } from '../components/content/ContentPackItems';
 
-type ContentPack = Database['public']['Tables']['content_pack']['Row'];
+interface ContentPack {
+  id: string;
+  name: string;
+  game_key: 'who_among_us' | 'agree_disagree' | 'guess_the_person';
+  tags: string[] | null;
+  state: string | null;
+  created_at: string;
+  updated_at: string;
+  item_count?: number;
+}
 
-const statusOptions = [
-  { value: 'draft', label: 'Draft', color: 'badge-warning' },
-  { value: 'in_review', label: 'In Review', color: 'badge-info' },
-  { value: 'approved', label: 'Approved', color: 'badge-success' },
-  { value: 'live', label: 'Live', color: 'badge-primary' },
-  { value: 'paused', label: 'Paused', color: 'badge-secondary' },
-  { value: 'archived', label: 'Archived', color: 'badge-error' },
-];
-
-const gameOptions = [
-  { value: 'who_among_us', label: 'Who Among Us?' },
-  { value: 'agree_disagree', label: 'Agree/Disagree' },
-  { value: 'guess_the_person', label: 'Guess the Person' },
-];
 
 export function ContentPacksPage() {
+  const { t } = useTranslation();
+  const { isAdmin, isEditor, loading: roleLoading } = useUserRole();
   const queryClient = useQueryClient();
+  const [searchQuery, setSearchQuery] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingPack, setEditingPack] = useState<ContentPack | null>(null);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [gameFilter, setGameFilter] = useState<string>('all');
+  const [deletingPack, setDeletingPack] = useState<ContentPack | null>(null);
+  const [managingItemsPack, setManagingItemsPack] = useState<ContentPack | null>(null);
 
-  // Fetch content packs
-  const { data: packs, isLoading } = useQuery({
-    queryKey: ['content-packs', statusFilter, gameFilter],
+  // Fetch content packs with item counts
+  const { data: packs, isLoading, error } = useQuery({
+    queryKey: ['content-packs'],
     queryFn: async () => {
-      let query = supabase
+      const { data: packs, error: packsError } = await supabase
         .from('content_pack')
         .select('*')
-        .order('updated_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
-      if (statusFilter !== 'all') {
-        query = query.eq('state', statusFilter);
-      }
+      if (packsError) throw packsError;
 
-      if (gameFilter !== 'all') {
-        query = query.eq('game_key', gameFilter);
-      }
+      // Get item counts for each pack
+      const { data: counts, error: countsError } = await supabase
+        .from('pack_item')
+        .select('pack_id')
+        .in('pack_id', packs?.map(p => p.id) || []);
 
-      const { data, error } = await query;
-      if (error) throw error;
-      return data as ContentPack[];
-    },
+      if (countsError) throw countsError;
+
+      const countMap = counts?.reduce((acc, item) => {
+        acc[item.pack_id] = (acc[item.pack_id] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>);
+
+      return packs?.map(pack => ({
+        ...pack,
+        item_count: countMap?.[pack.id] || 0
+      })) || [];
+    }
   });
 
-  // Create/Update mutation
-  const saveMutation = useMutation({
-    mutationFn: async (pack: Partial<ContentPack>) => {
-      if (editingPack) {
-        const { error } = await supabase
-          .from('content_pack')
-          .update(pack)
-          .eq('id', editingPack.id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('content_pack')
-          .insert(pack);
-        if (error) throw error;
-      }
+  // Create pack mutation
+  const createPackMutation = useMutation({
+    mutationFn: async (data: Partial<ContentPack>) => {
+      const { error } = await supabase
+        .from('content_pack')
+        .insert([data]);
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['content-packs'] });
-      toast.success(editingPack ? 'Content pack updated' : 'Content pack created');
+      toast.success(t('contentPacks.toast.created'));
       setShowCreateModal(false);
-      setEditingPack(null);
     },
-    onError: (error: any) => {
-      toast.error(error.message || 'Failed to save content pack');
-    },
+    onError: (error) => {
+      toast.error(t('common.error') + ': ' + error.message);
+    }
   });
 
-  // Delete mutation
-  const deleteMutation = useMutation({
+  // Update pack mutation
+  const updatePackMutation = useMutation({
+    mutationFn: async ({ id, ...data }: Partial<ContentPack>) => {
+      const { error } = await supabase
+        .from('content_pack')
+        .update(data)
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['content-packs'] });
+      toast.success(t('contentPacks.toast.updated'));
+      setEditingPack(null);
+    },
+    onError: (error) => {
+      toast.error(t('common.error') + ': ' + error.message);
+    }
+  });
+
+  // Delete pack mutation
+  const deletePackMutation = useMutation({
     mutationFn: async (id: string) => {
+      // First delete all pack items
+      const { error: itemsError } = await supabase
+        .from('pack_item')
+        .delete()
+        .eq('pack_id', id);
+      if (itemsError) throw itemsError;
+
+      // Then delete the pack
       const { error } = await supabase
         .from('content_pack')
         .delete()
@@ -91,335 +129,220 @@ export function ContentPacksPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['content-packs'] });
-      toast.success('Content pack deleted');
+      toast.success(t('contentPacks.toast.deleted'));
+      setDeletingPack(null);
     },
-    onError: (error: any) => {
-      toast.error(error.message || 'Failed to delete content pack');
-    },
+    onError: (error) => {
+      toast.error(t('common.error') + ': ' + error.message);
+    }
   });
 
-  // Status update mutation
-  const statusMutation = useMutation({
-    mutationFn: async ({ id, state }: { id: string; state: string }) => {
-      const { error } = await supabase
-        .from('content_pack')
-        .update({ state })
-        .eq('id', id);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['content-packs'] });
-      toast.success('Status updated');
-    },
-    onError: (error: any) => {
-      toast.error(error.message || 'Failed to update status');
-    },
-  });
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+  // Filter packs based on search query
+  const filteredPacks = useMemo(() => {
+    if (!packs || !searchQuery.trim()) return packs || [];
     
-    const pack = {
-      name: formData.get('name') as string,
-      game_key: formData.get('game_key') as string,
-      tags: (formData.get('tags') as string).split(',').map(t => t.trim()).filter(Boolean),
-      state: formData.get('state') as any,
-    };
-    
-    saveMutation.mutate(pack);
-  };
+    const query = searchQuery.toLowerCase();
+    return packs.filter(pack => 
+      pack.name.toLowerCase().includes(query) ||
+      pack.game_key.toLowerCase().includes(query) ||
+      pack.tags?.some(tag => tag.toLowerCase().includes(query))
+    );
+  }, [packs, searchQuery]);
 
-  const getNextStatus = (currentStatus: string) => {
-    const workflow: Record<string, string> = {
-      draft: 'in_review',
-      in_review: 'approved',
-      approved: 'live',
-      live: 'paused',
-      paused: 'live',
-    };
-    return workflow[currentStatus] || currentStatus;
+  if (roleLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <div className="text-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">{t('common.loading')}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin && !isEditor) {
+    return <Navigate to="/" replace />;
+  }
+
+  const getGameBadgeClass = (gameKey: string) => {
+    switch (gameKey) {
+      case 'who_among_us':
+        return 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200';
+      case 'agree_disagree':
+        return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
+      case 'guess_the_person':
+        return 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200';
+      default:
+        return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
+    }
   };
 
   return (
-    <div className="p-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-100">Content Packs</h1>
-          <p className="mt-2 text-gray-400">Manage content packs and their workflow</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{t('contentPacks.title')}</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">{t('contentPacks.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowCreateModal(true)}
           className="btn btn-primary"
         >
           <PlusIcon className="mr-2 h-4 w-4" />
-          Create Pack
+          {t('contentPacks.create')}
         </button>
       </div>
 
-      {/* Filters */}
-      <div className="mb-6 flex gap-4">
-        <select
-          value={gameFilter}
-          onChange={(e) => setGameFilter(e.target.value)}
-          className="input w-48"
-        >
-          <option value="all">All Games</option>
-          {gameOptions.map((game) => (
-            <option key={game.value} value={game.value}>
-              {game.label}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="input w-48"
-        >
-          <option value="all">All Statuses</option>
-          {statusOptions.map((status) => (
-            <option key={status.value} value={status.value}>
-              {status.label}
-            </option>
-          ))}
-        </select>
+      {/* Search */}
+      <div className="mb-4 sm:mb-6 relative max-w-md">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+        </div>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={t('contentPacks.search')}
+          className="input w-full pl-10"
+        />
       </div>
 
-      {/* Content Packs Table */}
-      <div className="card overflow-hidden">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Pack Name</th>
-              <th>Game</th>
-              <th>Tags</th>
-              <th>Status</th>
-              <th>Updated</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-800">
-            {isLoading ? (
-              <tr>
-                <td colSpan={6} className="text-center py-8">
-                  <div className="inline-flex items-center">
-                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary-600 border-t-transparent"></div>
-                    <span className="ml-2">Loading...</span>
-                  </div>
-                </td>
-              </tr>
-            ) : packs?.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="text-center py-8 text-gray-500">
-                  No content packs found
-                </td>
-              </tr>
-            ) : (
-              packs?.map((pack) => (
-                <tr key={pack.id}>
-                  <td className="font-medium">{pack.name}</td>
-                  <td>
-                    <span className="badge badge-info">
-                      {gameOptions.find(g => g.value === pack.game_key)?.label}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="flex flex-wrap gap-1">
-                      {pack.tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="badge badge-secondary text-xs">
-                          {tag}
-                        </span>
-                      ))}
-                      {pack.tags.length > 3 && (
-                        <span className="text-xs text-gray-500">
-                          +{pack.tags.length - 3}
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="flex items-center gap-2">
-                      <span className={`badge ${
-                        statusOptions.find(s => s.value === pack.state)?.color || 'badge-info'
-                      }`}>
-                        {statusOptions.find(s => s.value === pack.state)?.label}
-                      </span>
-                      {pack.state !== 'archived' && pack.state !== 'live' && (
-                        <button
-                          onClick={() => statusMutation.mutate({
-                            id: pack.id,
-                            state: getNextStatus(pack.state),
-                          })}
-                          className="text-primary-500 hover:text-primary-400"
-                          title={`Move to ${getNextStatus(pack.state)}`}
-                        >
-                          <ArrowPathIcon className="h-4 w-4" />
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                  <td className="text-sm text-gray-400">
-                    {new Date(pack.updated_at).toLocaleDateString()}
-                  </td>
-                  <td>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          setEditingPack(pack);
-                          setShowCreateModal(true);
-                        }}
-                        className="text-gray-400 hover:text-primary-500"
-                      >
-                        <PencilIcon className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (confirm('Are you sure you want to delete this pack?')) {
-                            deleteMutation.mutate(pack.id);
-                          }
-                        }}
-                        className="text-gray-400 hover:text-red-500"
-                        disabled={pack.state === 'live'}
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Create/Edit Modal */}
-      <Transition appear show={showCreateModal} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={() => {
-          setShowCreateModal(false);
-          setEditingPack(null);
-        }}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-75" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-gray-900 p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-100 mb-4"
-                  >
-                    {editingPack ? 'Edit Content Pack' : 'Create New Content Pack'}
-                  </Dialog.Title>
-                  
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Pack Name
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        defaultValue={editingPack?.name || ''}
-                        className="input w-full"
-                        required
-                        placeholder="Summer 2024 Collection"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Game
-                      </label>
-                      <select
-                        name="game_key"
-                        defaultValue={editingPack?.game_key || ''}
-                        className="input w-full"
-                        required
-                      >
-                        <option value="">Select a game</option>
-                        {gameOptions.map((game) => (
-                          <option key={game.value} value={game.value}>
-                            {game.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Tags (comma-separated)
-                      </label>
-                      <input
-                        type="text"
-                        name="tags"
-                        defaultValue={editingPack?.tags?.join(', ') || ''}
-                        className="input w-full"
-                        placeholder="summer, fun, egyptian"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Status
-                      </label>
-                      <select
-                        name="state"
-                        defaultValue={editingPack?.state || 'draft'}
-                        className="input w-full"
-                      >
-                        {statusOptions.map((status) => (
-                          <option key={status.value} value={status.value}>
-                            {status.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="mt-6 flex justify-end gap-3">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowCreateModal(false);
-                          setEditingPack(null);
-                        }}
-                        className="btn btn-secondary"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={saveMutation.isPending}
-                        className="btn btn-primary"
-                      >
-                        {saveMutation.isPending ? 'Saving...' : editingPack ? 'Update' : 'Create'}
-                      </button>
-                    </div>
-                  </form>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
+      {/* Content */}
+      {isLoading ? (
+        <div className="text-center py-8">
+          <div className="inline-flex items-center">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
+            <span className="ml-2">{t('common.loading')}</span>
           </div>
-        </Dialog>
-      </Transition>
+        </div>
+      ) : error ? (
+        <div className="text-center py-8 text-red-500">
+          {t('common.error')}: {(error as any).message}
+        </div>
+      ) : filteredPacks.length === 0 ? (
+        <div className="text-center py-12">
+          <ArchiveBoxIcon className="mx-auto h-12 w-12 text-gray-400" />
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
+            {searchQuery ? t('contentPacks.noMatch') : t('contentPacks.noPacks')}
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {filteredPacks.map((pack) => (
+            <div key={pack.id} className="card p-6 hover:shadow-lg transition-shadow">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    {pack.name}
+                  </h3>
+                  <div className="mt-1">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getGameBadgeClass(pack.game_key)}`}>
+                      {t(`content.games.${pack.game_key}`)}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => setManagingItemsPack(pack)}
+                    className="p-1 text-primary hover:text-primary-dark"
+                    title={t('contentPacks.manageItems')}
+                  >
+                    <CubeIcon className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => setEditingPack(pack)}
+                    className="p-1 text-gray-600 dark:text-gray-400 hover:text-primary"
+                  >
+                    <PencilIcon className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setDeletingPack(pack)}
+                    className="p-1 text-gray-600 dark:text-gray-400 hover:text-red-500"
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+
+              {pack.tags && pack.tags.length > 0 && (
+                <div className="mb-3 flex flex-wrap gap-1">
+                  {pack.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                    >
+                      <TagIcon className="mr-1 h-3 w-3" />
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+                <span>{t('contentPacks.itemCount', { count: pack.item_count || 0 })}</span>
+                <span>{new Date(pack.created_at).toLocaleDateString()}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Create Modal */}
+      <Modal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        title={t('contentPacks.createPack')}
+        size="md"
+      >
+        <ContentPackForm
+          onSubmit={(data) => createPackMutation.mutate(data)}
+          onCancel={() => setShowCreateModal(false)}
+          isLoading={createPackMutation.isPending}
+        />
+      </Modal>
+
+      {/* Edit Modal */}
+      <Modal
+        isOpen={!!editingPack}
+        onClose={() => setEditingPack(null)}
+        title={t('contentPacks.editPack')}
+        size="md"
+      >
+        {editingPack && (
+          <ContentPackForm
+            pack={editingPack}
+            onSubmit={(data) => updatePackMutation.mutate({ id: editingPack.id, ...data })}
+            onCancel={() => setEditingPack(null)}
+            isLoading={updatePackMutation.isPending}
+          />
+        )}
+      </Modal>
+
+      {/* Delete Confirmation */}
+      <ConfirmDialog
+        isOpen={!!deletingPack}
+        onClose={() => setDeletingPack(null)}
+        onConfirm={() => deletingPack && deletePackMutation.mutate(deletingPack.id)}
+        title={t('contentPacks.deleteConfirm.title')}
+        message={t('contentPacks.deleteConfirm.message', { name: deletingPack?.name })}
+        confirmText={t('contentPacks.deleteConfirm.confirmText')}
+        confirmButtonClass="btn-danger"
+      />
+
+      {/* Manage Items Modal */}
+      <Modal
+        isOpen={!!managingItemsPack}
+        onClose={() => setManagingItemsPack(null)}
+        title={t('contentPacks.manageItems')}
+        size="lg"
+      >
+        {managingItemsPack && (
+          <ContentPackItems
+            pack={managingItemsPack}
+            onClose={() => setManagingItemsPack(null)}
+          />
+        )}
+      </Modal>
     </div>
   );
 }
