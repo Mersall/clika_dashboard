@@ -101,11 +101,9 @@ export const useUpdateContent = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['content'] });
-      toast.success('Content updated successfully');
     },
     onError: (error) => {
-      toast.error('Failed to update content');
-      console.error(error);
+      console.error('Update content error:', error);
     },
   });
 };

@@ -45,7 +45,8 @@
       "Bash(./kill-servers.sh)",
       "mcp__playwright__browser_select_option",
       "Bash(npm run build:*)",
-      "Bash(true)"
+      "Bash(true)",
+      "Read(//Users/mersall/Library/Application Support/Code/User/**)"
     ],
     "deny": []
   },

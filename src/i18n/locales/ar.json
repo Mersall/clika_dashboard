@@ -57,9 +57,9 @@
       "inReview": "بيتراجع",
       "approved": "موافق عليه",
       "rejected": "مرفوض",
+      "archived": "مؤرشف",
       "live": "لايف",
-      "paused": "متوقف",
-      "archived": "مؤرشف"
+      "paused": "متوقف"
     },
     "form": {
       "editContent": "عدّل المحتوى",
@@ -132,10 +132,20 @@
     "subtitle": "راجع واعتمد طلبات المحتوى",
     "reviewGuidelines": "إرشادات المراجعة",
     "noContent": "مفيش محتوى للمراجعة في القسم ده",
+    "approve": "موافق",
+    "reject": "رفض",
+    "requestChanges": "طلب تعديل",
+    "changes": "تعديل",
+    "edit": "تحرير",
+    "goLive": "شغّل",
+    "pause": "وقف",
+    "restore": "استرجع",
     "toast": {
       "approved": "المحتوى اتوافق عليه",
       "rejected": "المحتوى اترفض",
-      "changesRequested": "طلبنا تعديلات"
+      "changesRequested": "طلبنا تعديلات",
+      "goLive": "المحتوى شغال دلوقتي",
+      "paused": "المحتوى اتوقف"
     }
   },
   "sessions": {

@@ -1,11 +1,17 @@
-import { CheckIcon, XMarkIcon, ClockIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { CheckIcon, XMarkIcon, ClockIcon, PencilIcon, PlayIcon, PauseIcon } from '@heroicons/react/24/outline';
 import type { ContentItem } from '../../hooks/useContent';
+import { RequestChangesModal } from './RequestChangesModal';
+import { EditContentModal } from './EditContentModal';
+import { useTranslation } from 'react-i18next';
 
 interface ContentReviewCardProps {
   item: ContentItem;
   onApprove: (id: string) => void;
   onReject: (id: string) => void;
   onRequestChanges: (id: string, feedback: string) => void;
+  onGoLive: (id: string) => void;
+  onPause: (id: string) => void;
 }
 
 const gameLabels: Record<string, string> = {
@@ -19,7 +25,12 @@ export function ContentReviewCard({
   onApprove,
   onReject,
   onRequestChanges,
+  onGoLive,
+  onPause,
 }: ContentReviewCardProps) {
+  const { t } = useTranslation();
+  const [isRequestChangesModalOpen, setIsRequestChangesModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const getContentText = () => {
     if (item.game_key === 'who_among_us') {
       return item.payload?.question || 'No question';
@@ -85,38 +96,121 @@ export function ContentReviewCard({
       </div>
       
       <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-        <div className="flex flex-col sm:flex-row gap-2">
-          <button
-            onClick={() => onApprove(item.id)}
-            className="btn btn-success btn-sm flex-1 justify-center"
-          >
-            <CheckIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
-            <span className="hidden sm:inline">Approve</span>
-            <span className="sm:hidden">OK</span>
-          </button>
-          <button
-            onClick={() => {
-              const feedback = prompt('Provide feedback for changes:');
-              if (feedback) {
-                onRequestChanges(item.id, feedback);
-              }
-            }}
-            className="btn btn-secondary btn-sm flex-1 justify-center"
-          >
-            <ClockIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
-            <span className="hidden sm:inline">Request Changes</span>
-            <span className="sm:hidden">Changes</span>
-          </button>
-          <button
-            onClick={() => onReject(item.id)}
-            className="btn btn-danger btn-sm flex-1 justify-center"
-          >
-            <XMarkIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
-            <span className="hidden sm:inline">Reject</span>
-            <span className="sm:hidden">No</span>
-          </button>
+        <div className="flex flex-col gap-2">
+          {/* Primary Actions */}
+          <div className="flex gap-2">
+            {/* Draft & In Review: Approve/Reject */}
+            {(item.status === 'draft' || item.status === 'in_review') && (
+              <>
+                <button
+                  onClick={() => onApprove(item.id)}
+                  className="btn btn-success btn-sm flex-1 justify-center"
+                >
+                  <CheckIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                  <span className="hidden sm:inline">{t('contentReview.approve')}</span>
+                  <span className="sm:hidden">{t('contentReview.approve')}</span>
+                </button>
+                <button
+                  onClick={() => onReject(item.id)}
+                  className="btn btn-danger btn-sm flex-1 justify-center"
+                >
+                  <XMarkIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                  <span className="hidden sm:inline">{t('contentReview.reject')}</span>
+                  <span className="sm:hidden">{t('contentReview.reject')}</span>
+                </button>
+              </>
+            )}
+
+            {/* Approved: Go Live */}
+            {item.status === 'approved' && (
+              <button
+                onClick={() => onGoLive(item.id)}
+                className="btn btn-primary btn-sm flex-1 justify-center"
+              >
+                <PlayIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                <span className="hidden sm:inline">{t('contentReview.goLive')}</span>
+                <span className="sm:hidden">{t('contentReview.goLive')}</span>
+              </button>
+            )}
+
+            {/* Live: Pause */}
+            {item.status === 'live' && (
+              <button
+                onClick={() => onPause(item.id)}
+                className="btn btn-secondary btn-sm flex-1 justify-center"
+              >
+                <PauseIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                <span className="hidden sm:inline">{t('contentReview.pause')}</span>
+                <span className="sm:hidden">{t('contentReview.pause')}</span>
+              </button>
+            )}
+
+            {/* Paused: Go Live again */}
+            {item.status === 'paused' && (
+              <button
+                onClick={() => onGoLive(item.id)}
+                className="btn btn-primary btn-sm flex-1 justify-center"
+              >
+                <PlayIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                <span className="hidden sm:inline">{t('contentReview.goLive')}</span>
+                <span className="sm:hidden">{t('contentReview.goLive')}</span>
+              </button>
+            )}
+
+            {/* Archived: Restore (make draft) */}
+            {item.status === 'archived' && (
+              <button
+                onClick={() => onRequestChanges(item.id, 'Restored from archive')}
+                className="btn btn-outline btn-sm flex-1 justify-center"
+              >
+                <ClockIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                <span className="hidden sm:inline">{t('contentReview.restore')}</span>
+                <span className="sm:hidden">{t('contentReview.restore')}</span>
+              </button>
+            )}
+          </div>
+
+          {/* Secondary Actions */}
+          <div className="flex gap-2">
+            {/* Request Changes - available for draft, in_review, approved */}
+            {(item.status === 'draft' || item.status === 'in_review' || item.status === 'approved') && (
+              <button
+                onClick={() => setIsRequestChangesModalOpen(true)}
+                className="btn btn-secondary btn-sm flex-1 justify-center"
+              >
+                <ClockIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                <span className="hidden sm:inline">{t('contentReview.requestChanges')}</span>
+                <span className="sm:hidden">{t('contentReview.changes')}</span>
+              </button>
+            )}
+
+            {/* Edit - available for all statuses except archived */}
+            {item.status !== 'archived' && (
+              <button
+                onClick={() => setIsEditModalOpen(true)}
+                className="btn btn-outline btn-sm flex-1 justify-center"
+              >
+                <PencilIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                <span className="hidden sm:inline">{t('contentReview.edit')}</span>
+                <span className="sm:hidden">{t('contentReview.edit')}</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
+
+      <RequestChangesModal
+        isOpen={isRequestChangesModalOpen}
+        onClose={() => setIsRequestChangesModalOpen(false)}
+        onSubmit={(feedback) => onRequestChanges(item.id, feedback)}
+        contentTitle={getContentText()}
+      />
+
+      <EditContentModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        item={item}
+      />
     </div>
   );
 }

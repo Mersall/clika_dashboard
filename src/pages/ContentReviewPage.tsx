@@ -2,23 +2,23 @@ import { useState } from 'react';
 import { useContent, useUpdateContent } from '../hooks/useContent';
 import { ContentReviewCard } from '../components/content/ContentReviewCard';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '../contexts/AuthContext';
 import { useUserRole } from '../hooks/useUserRole';
 import { Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 export function ContentReviewPage() {
   const { t } = useTranslation();
-  const { user } = useAuth();
   const { isReviewer, loading: roleLoading } = useUserRole();
   
   const statusTabs = [
     { value: 'draft', label: t('content.status.draft'), color: 'bg-gray-500' },
     { value: 'in_review', label: t('content.status.inReview'), color: 'bg-amber-500' },
-    { value: 'approved', label: t('content.status.approved'), color: 'bg-primary' },
-    { value: 'rejected', label: t('content.status.rejected'), color: 'bg-secondary' },
+    { value: 'approved', label: t('content.status.approved'), color: 'bg-green-600' },
+    { value: 'live', label: t('content.status.live'), color: 'bg-blue-600' },
+    { value: 'paused', label: t('content.status.paused'), color: 'bg-yellow-600' },
+    { value: 'archived', label: t('content.status.archived'), color: 'bg-red-600' },
   ];
-  const [selectedStatus, setSelectedStatus] = useState('in_review');
+  const [selectedStatus, setSelectedStatus] = useState('draft');
   const { data: items, isLoading } = useContent('all');
   const updateMutation = useUpdateContent();
 
@@ -54,25 +54,70 @@ export function ContentReviewPage() {
     const item = items?.find(i => i.id === id);
     if (!item) return;
 
-    await updateMutation.mutateAsync({
-      ...item,
-      status: 'rejected',
-      active: false,
-    });
-    toast.success(t('contentReview.toast.rejected'));
+    try {
+      await updateMutation.mutateAsync({
+        ...item,
+        status: 'archived',
+        active: false,
+      });
+      toast.success(t('contentReview.toast.rejected'));
+    } catch (error) {
+      console.error('Error rejecting content:', error);
+      toast.error('Failed to reject content');
+    }
   };
 
   const handleRequestChanges = async (id: string, feedback: string) => {
     const item = items?.find(i => i.id === id);
     if (!item) return;
 
-    // In a real app, we'd store the feedback somewhere
-    await updateMutation.mutateAsync({
-      ...item,
-      status: 'draft',
-      active: false,
-    });
-    toast.success(t('contentReview.toast.changesRequested'));
+    try {
+      // In a real app, we'd store the feedback somewhere
+      console.log('Feedback for item', id, ':', feedback);
+      await updateMutation.mutateAsync({
+        ...item,
+        status: 'draft',
+        active: false,
+      });
+      toast.success(t('contentReview.toast.changesRequested'));
+    } catch (error) {
+      console.error('Error requesting changes:', error);
+      toast.error('Failed to request changes');
+    }
+  };
+
+  const handleGoLive = async (id: string) => {
+    const item = items?.find(i => i.id === id);
+    if (!item) return;
+
+    try {
+      await updateMutation.mutateAsync({
+        ...item,
+        status: 'live',
+        active: true,
+      });
+      toast.success(t('contentReview.toast.goLive'));
+    } catch (error) {
+      console.error('Error making content live:', error);
+      toast.error('Failed to make content live');
+    }
+  };
+
+  const handlePause = async (id: string) => {
+    const item = items?.find(i => i.id === id);
+    if (!item) return;
+
+    try {
+      await updateMutation.mutateAsync({
+        ...item,
+        status: 'paused',
+        active: false,
+      });
+      toast.success(t('contentReview.toast.paused'));
+    } catch (error) {
+      console.error('Error pausing content:', error);
+      toast.error('Failed to pause content');
+    }
   };
 
   const getStatusCount = (status: string) => {
@@ -127,6 +172,8 @@ export function ContentReviewPage() {
               onApprove={handleApprove}
               onReject={handleReject}
               onRequestChanges={handleRequestChanges}
+              onGoLive={handleGoLive}
+              onPause={handlePause}
             />
           ))}
         </div>

@@ -57,9 +57,9 @@
       "inReview": "In Review",
       "approved": "Approved",
       "rejected": "Rejected",
+      "archived": "Archived",
       "live": "Live",
-      "paused": "Paused",
-      "archived": "Archived"
+      "paused": "Paused"
     },
     "form": {
       "editContent": "Edit Content",
@@ -132,10 +132,20 @@
     "subtitle": "Review and approve content submissions",
     "reviewGuidelines": "Review Guidelines",
     "noContent": "No content to review in this category",
+    "approve": "Approve",
+    "reject": "Reject",
+    "requestChanges": "Request Changes",
+    "changes": "Changes",
+    "edit": "Edit",
+    "goLive": "Go Live",
+    "pause": "Pause",
+    "restore": "Restore",
     "toast": {
       "approved": "Content approved",
       "rejected": "Content rejected",
-      "changesRequested": "Changes requested"
+      "changesRequested": "Changes requested",
+      "goLive": "Content is now live",
+      "paused": "Content paused"
     }
   },
   "sessions": {
