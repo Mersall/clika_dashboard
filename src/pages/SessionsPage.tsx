@@ -16,6 +16,10 @@ export function SessionsPage() {
     { value: 'who_among_us', label: t('content.games.who_among_us') },
     { value: 'agree_disagree', label: t('content.games.agree_disagree') },
     { value: 'guess_the_person', label: t('content.games.guess_the_person') },
+    { value: 'football_trivia', label: t('content.games.football_trivia') },
+    { value: 'football_logos', label: t('content.games.football_logos') },
+    { value: 'football_players', label: t('content.games.football_players') },
+    { value: 'football_moments', label: t('content.games.football_moments') },
   ];
   const [selectedGame, setSelectedGame] = useState<string>('all');
   const [selectedDateRange, setSelectedDateRange] = useState<string>('7d');
@@ -204,7 +208,14 @@ export function SessionsPage() {
   }, [sessions, searchQuery, selectedStatus, minRounds, minDuration, gameOptions]);
 
   const totalSessions = filteredSessions?.length || 0;
-  const activeSessions = filteredSessions?.filter(s => !s.ended_at).length || 0;
+
+  // Count truly active sessions (started in last 30 minutes and not ended)
+  const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
+  const activeSessions = filteredSessions?.filter(s => {
+    if (s.ended_at) return false; // Session has ended
+    const startedAt = new Date(s.started_at);
+    return startedAt >= thirtyMinutesAgo; // Started within last 30 minutes
+  }).length || 0;
 
   return (
     <div className="p-4 sm:p-6 lg:p-8">
@@ -328,7 +339,10 @@ export function SessionsPage() {
         <div className="card p-4 sm:p-6">
           <div className="flex items-center justify-between">
             <div className="min-w-0 flex-1">
-              <p className="text-xs sm:text-sm text-gray-400 truncate">{t('sessions.stats.activeSessions')}</p>
+              <p className="text-xs sm:text-sm text-gray-400 truncate">
+                {t('sessions.stats.activeSessions')}
+                <span className="text-xs text-gray-500 ml-1">(30 min)</span>
+              </p>
               <p className="text-xl sm:text-2xl font-bold text-gray-100">{activeSessions}</p>
             </div>
             <UserGroupIcon className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 flex-shrink-0 ml-2" />
@@ -365,18 +379,39 @@ export function SessionsPage() {
         <div className="card p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">{t('sessions.gameDistribution')}</h2>
           <div className="space-y-3">
-            {Object.entries(gameStats || {}).map(([game, stats]: [string, any]) => {
+            {Object.entries(gameStats || {})
+              .sort(([,a]: [string, any], [,b]: [string, any]) => b.count - a.count)
+              .map(([game, stats]: [string, any], index) => {
+              const maxCount = Math.max(...Object.values(gameStats || {}).map((s: any) => s.count));
               const percentage = totalSessions > 0 ? (stats.count / totalSessions * 100).toFixed(1) : 0;
+              const barWidth = maxCount > 0 ? (stats.count / maxCount * 100) : 0;
+
+              // Different colors for each game
+              const gameColors: Record<string, string> = {
+                'who_among_us': 'bg-blue-500',
+                'agree_disagree': 'bg-purple-500',
+                'guess_the_person': 'bg-cyan-500',
+                'football_trivia': 'bg-green-500',
+                'football_logos': 'bg-yellow-500',
+                'football_players': 'bg-orange-500',
+                'football_moments': 'bg-pink-500'
+              };
+
+              const barColor = gameColors[game] || 'bg-primary-600';
+
               return (
                 <div key={game}>
                   <div className="flex justify-between mb-1">
                     <span className="text-sm text-gray-300">{stats.label}</span>
-                    <span className="text-sm text-gray-400">{stats.count} ({percentage}%)</span>
+                    <span className="text-sm text-gray-400">{stats.count.toLocaleString()} ({percentage}%)</span>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div 
-                      className="bg-primary-600 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${percentage}%` }}
+                  <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
+                    <div
+                      className={`${barColor} h-3 rounded-full transition-all duration-500`}
+                      style={{
+                        width: `${Math.max(barWidth, 2)}%`,
+                        minWidth: '2%'
+                      }}
                     />
                   </div>
                 </div>

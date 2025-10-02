@@ -164,7 +164,7 @@ export function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Key Metrics */}
+      {/* Key Metrics - Overview */}
       <div className="mb-6 sm:mb-8 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4 sm:p-6">
           <div className="flex items-center gap-1">
@@ -190,8 +190,8 @@ export function AnalyticsPage() {
             <HelpTooltip helpKey="analytics.stats.avgSessionTime" />
           </div>
           <p className="mt-1 sm:mt-2 text-2xl sm:text-3xl font-bold text-gray-100">
-            {sessionStats?.average_duration_seconds 
-              ? `${Math.round(sessionStats.average_duration_seconds / 60)} ${t('analytics.minutes')}` 
+            {sessionStats?.average_duration_seconds
+              ? `${Math.round(sessionStats.average_duration_seconds / 60)} ${t('analytics.minutes')}`
               : `0 ${t('analytics.minutes')}`}
           </p>
         </div>
@@ -206,26 +206,21 @@ export function AnalyticsPage() {
         </div>
       </div>
 
-      {/* DAU Widget */}
+      {/* Daily Active Users - Important Metric */}
       <div className="mb-6">
         <DAUWidget />
       </div>
 
-      {/* Quality Metrics Widget */}
-      <div className="mb-6">
-        <QualityMetricsWidget />
-      </div>
-
-      {/* Charts */}
-      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
+      {/* Primary Charts - Visual Representation */}
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2 mb-6">
         <div className="card p-4 sm:p-6">
           <div className="flex items-center gap-2 mb-3 sm:mb-4">
             <h2 className="text-base sm:text-lg font-semibold text-gray-100">{t('analytics.charts.sessionsOverTime')}</h2>
             <HelpTooltip helpKey="analytics.charts.sessionsOverTime" />
           </div>
           <div className="h-48 sm:h-64">
-            <Line 
-              data={sessionsChartData} 
+            <Line
+              data={sessionsChartData}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
@@ -236,14 +231,14 @@ export function AnalyticsPage() {
                   y: {
                     beginAtZero: true,
                     grid: { color: 'rgba(255, 255, 255, 0.1)' },
-                    ticks: { 
+                    ticks: {
                       color: 'rgba(255, 255, 255, 0.7)',
                       font: { size: 10 }
                     },
                   },
                   x: {
                     grid: { display: false },
-                    ticks: { 
+                    ticks: {
                       color: 'rgba(255, 255, 255, 0.7)',
                       font: { size: 10 },
                       maxRotation: 45,
@@ -263,7 +258,7 @@ export function AnalyticsPage() {
           </div>
           <div className="h-48 sm:h-64">
             {gameStats && gameStats.length > 0 ? (
-              <Doughnut 
+              <Doughnut
                 data={gameDistributionData}
                 options={{
                   responsive: true,
@@ -289,8 +284,13 @@ export function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Additional Stats */}
-      <div className="mt-4 sm:mt-6 grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
+      {/* Quality Metrics - Detailed Performance */}
+      <div className="mb-6">
+        <QualityMetricsWidget />
+      </div>
+
+      {/* Game & Content Details */}
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
         <div className="card p-4 sm:p-6">
           <h2 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold text-gray-100">{t('analytics.charts.contentByStatus')}</h2>
           <div className="space-y-2">
@@ -326,8 +326,8 @@ export function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Ad Delivery Stats */}
-      <div className="mt-4 sm:mt-6">
+      {/* Ad Delivery Stats - Monetization Metrics */}
+      <div className="mt-6 sm:mt-8">
         <h2 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold text-gray-100">{t('analytics.adDelivery.title')}</h2>
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
           <div className="card p-4 sm:p-6">

@@ -40,6 +40,10 @@ export function RoundAnalyticsPage() {
     { value: 'who_among_us', label: t('content.games.who_among_us') },
     { value: 'agree_disagree', label: t('content.games.agree_disagree') },
     { value: 'guess_the_person', label: t('content.games.guess_the_person') },
+    { value: 'football_trivia', label: t('content.games.football_trivia') },
+    { value: 'football_logos', label: t('content.games.football_logos') },
+    { value: 'football_players', label: t('content.games.football_players') },
+    { value: 'football_moments', label: t('content.games.football_moments') },
   ];
 
   // Calculate date range based on filter
@@ -133,8 +137,8 @@ export function RoundAnalyticsPage() {
       datasets: [{
         label: t('rounds.charts.roundsByGame'),
         data: Object.values(stats.gameBreakdown),
-        backgroundColor: ['#8dc63f', '#ff6b6b', '#4ecdc4'],
-        borderColor: ['#7ab635', '#ff5252', '#45b7aa'],
+        backgroundColor: ['#8dc63f', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f4a261', '#9b5de5', '#f15bb5'],
+        borderColor: ['#7ab635', '#ff5252', '#45b7aa', '#3aa0c1', '#e39551', '#8b4dd5', '#e14ba5'],
         borderWidth: 1,
       }],
     };

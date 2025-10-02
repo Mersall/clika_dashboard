@@ -60,7 +60,9 @@
       "Bash(for id in 11 12 13 14 15)",
       "Bash(do echo \"Testing ID $id:\")",
       "WebSearch",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": []
   },

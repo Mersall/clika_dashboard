@@ -11,6 +11,10 @@ const gameOptions = [
   { value: 'who_among_us', label: 'Who Among Us?' },
   { value: 'agree_disagree', label: 'Agree/Disagree' },
   { value: 'guess_the_person', label: 'Guess the Person' },
+  { value: 'football_trivia', label: 'Football Trivia' },
+  { value: 'football_logos', label: 'Football Logos' },
+  { value: 'football_players', label: 'Football Players' },
+  { value: 'football_moments', label: 'Football Moments' },
 ];
 
 const depthOptions = [
@@ -43,6 +47,14 @@ export function SimpleContentForm({ initialValues, onSubmit, onCancel }: SimpleC
         content = initialValues.payload.statement || '';
       } else if (initialValues.game_key === 'guess_the_person') {
         content = initialValues.payload.person_name || '';
+      } else if (initialValues.game_key === 'football_trivia') {
+        content = initialValues.payload.question || initialValues.payload.question_en || '';
+      } else if (initialValues.game_key === 'football_logos') {
+        content = initialValues.payload.answer || initialValues.payload.answer_en || '';
+      } else if (initialValues.game_key === 'football_players') {
+        content = initialValues.payload.answer || initialValues.payload.answer_ar || '';
+      } else if (initialValues.game_key === 'football_moments') {
+        content = initialValues.payload.moment_description || initialValues.payload.description || '';
       }
       setFormData(prev => ({ ...prev, content }));
     }
@@ -62,6 +74,14 @@ export function SimpleContentForm({ initialValues, onSubmit, onCancel }: SimpleC
         payload = { statement: formData.content };
       } else if (formData.game_key === 'guess_the_person') {
         payload = { person_name: formData.content, clues: [] };
+      } else if (formData.game_key === 'football_trivia') {
+        payload = { question: formData.content, answer: '' };
+      } else if (formData.game_key === 'football_logos') {
+        payload = { answer: formData.content, logo_url: '' };
+      } else if (formData.game_key === 'football_players') {
+        payload = { answer_ar: formData.content, hints_ar: [] };
+      } else if (formData.game_key === 'football_moments') {
+        payload = { moment_description: formData.content };
       }
       
       await onSubmit({
@@ -87,6 +107,14 @@ export function SimpleContentForm({ initialValues, onSubmit, onCancel }: SimpleC
         return 'Statement';
       case 'guess_the_person':
         return 'Person Name';
+      case 'football_trivia':
+        return 'Question';
+      case 'football_logos':
+        return 'Team/Club Name';
+      case 'football_players':
+        return 'Player Name';
+      case 'football_moments':
+        return 'Moment Description';
       default:
         return 'Content';
     }

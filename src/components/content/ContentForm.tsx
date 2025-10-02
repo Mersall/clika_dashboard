@@ -13,6 +13,10 @@ const gameOptions = [
   { value: 'who_among_us', label: 'Who Among Us?' },
   { value: 'agree_disagree', label: 'Agree/Disagree' },
   { value: 'guess_the_person', label: 'Guess the Person' },
+  { value: 'football_trivia', label: 'Football Trivia' },
+  { value: 'football_logos', label: 'Football Logos' },
+  { value: 'football_players', label: 'Football Players' },
+  { value: 'football_moments', label: 'Football Moments' },
 ];
 
 const depthOptions = [
