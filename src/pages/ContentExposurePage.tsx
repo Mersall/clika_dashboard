@@ -24,21 +24,18 @@ export function ContentExposurePage() {
   const [searchTerm, setSearchTerm] = useState('');
   
   const { data: users } = useUsers();
-  
-  // Mock users for testing
-  const testUsers = [
-    { user_id: 'd8a7f3e2-1234-5678-9abc-def012345678', display_name: 'Test User 1', role: '' },
-    { user_id: 'e9b8f4d3-2345-6789-abcd-ef0123456789', display_name: 'Test User 2', role: '' },
-  ];
+
   const { data: userExposure, isLoading: userLoading } = useUserContentExposure(selectedUserId);
   const { data: overexposed, isLoading: overexposedLoading } = useOverexposedContent(exposureThreshold);
   const { data: stats } = useContentExposureStats();
   const resetMutation = useResetUserExposure();
 
-  // Filter app users only - use test users for demo
+  // Filter app users only
   const appUsers = useMemo(() => {
-    return testUsers;
-  }, []);
+    if (!users) return [];
+    // Filter out non-app users if needed
+    return users.filter(u => u.user_id && u.display_name);
+  }, [users]);
 
   // Filter user exposure based on search
   const filteredExposure = useMemo(() => {

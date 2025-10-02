@@ -15,7 +15,10 @@ import { Line, Doughnut } from 'react-chartjs-2';
 import { useSessionStats, useGameStats, useContentStats, useAdDeliveryStats } from '../hooks/useAnalytics';
 import { useTranslation } from 'react-i18next';
 import { DAUWidget } from '../components/analytics/DAUWidget';
+import { QualityMetricsWidget } from '../components/analytics/QualityMetricsWidget';
 import { HelpTooltip } from '../components/ui/HelpTooltip';
+import { ArrowDownTrayIcon } from '@heroicons/react/24/outline';
+import { useExport } from '../hooks/useExport';
 
 ChartJS.register(
   CategoryScale,
@@ -32,12 +35,40 @@ ChartJS.register(
 export function AnalyticsPage() {
   const { t } = useTranslation();
   const [dateRange, setDateRange] = useState('7d');
+  const { exportData } = useExport();
 
   // Fetch analytics data using our custom hooks
   const { data: sessionStats, isLoading: sessionsLoading } = useSessionStats();
   const { data: gameStats, isLoading: gamesLoading } = useGameStats();
   const { data: contentStats, isLoading: contentLoading } = useContentStats();
   const { data: adStats, isLoading: adLoading } = useAdDeliveryStats();
+
+  const handleExportAnalytics = () => {
+    const analyticsData = [
+      { metric: 'Total Sessions', value: sessionStats?.totalSessions || 0 },
+      { metric: 'Unique Users', value: sessionStats?.uniqueUsers || 0 },
+      { metric: 'Avg Session Duration', value: `${sessionStats?.avgDuration || 0} min` },
+      { metric: 'Total Rounds', value: sessionStats?.totalRounds || 0 },
+      { metric: 'Active Content', value: contentStats?.activeContent || 0 },
+      { metric: 'Total Content', value: contentStats?.totalContent || 0 },
+      { metric: 'Avg Difficulty', value: contentStats?.avgDifficulty?.toFixed(1) || 'N/A' },
+      { metric: 'Total Ad Impressions', value: adStats?.totalImpressions || 0 },
+      { metric: 'Total Ad Clicks', value: adStats?.totalClicks || 0 },
+      { metric: 'CTR', value: `${adStats?.ctr || 0}%` },
+    ];
+
+    const gameData = gameStats?.map(game => ({
+      game_type: game.game_type,
+      sessions: game.session_count,
+      percentage: `${game.percentage?.toFixed(1)}%`,
+    })) || [];
+
+    exportData(
+      [...analyticsData, ...gameData],
+      ['metric', 'value', 'game_type', 'sessions', 'percentage'],
+      { filename: 'analytics-export' }
+    );
+  };
 
   const isLoading = sessionsLoading || gamesLoading || contentLoading || adLoading;
 
@@ -113,17 +144,24 @@ export function AnalyticsPage() {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-100">{t('analytics.title')}</h1>
           <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-400">{t('analytics.subtitle')}</p>
         </div>
-        
-        <select
-          value={dateRange}
-          onChange={(e) => setDateRange(e.target.value)}
-          className="input w-full sm:w-40"
-        >
-          <option value="24h">{t('analytics.filters.last24Hours')}</option>
-          <option value="7d">{t('analytics.filters.last7Days')}</option>
-          <option value="30d">{t('analytics.filters.last30Days')}</option>
-          <option value="90d">{t('analytics.filters.last90Days')}</option>
-        </select>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <select
+            value={dateRange}
+            onChange={(e) => setDateRange(e.target.value)}
+            className="input w-full sm:w-40"
+          >
+            <option value="24h">{t('analytics.filters.last24Hours')}</option>
+            <option value="7d">{t('analytics.filters.last7Days')}</option>
+            <option value="30d">{t('analytics.filters.last30Days')}</option>
+            <option value="90d">{t('analytics.filters.last90Days')}</option>
+          </select>
+
+          <button onClick={handleExportAnalytics} className="btn btn-secondary">
+            <ArrowDownTrayIcon className="mr-2 h-4 w-4" />
+            Export
+          </button>
+        </div>
       </div>
 
       {/* Key Metrics */}
@@ -171,6 +209,11 @@ export function AnalyticsPage() {
       {/* DAU Widget */}
       <div className="mb-6">
         <DAUWidget />
+      </div>
+
+      {/* Quality Metrics Widget */}
+      <div className="mb-6">
+        <QualityMetricsWidget />
       </div>
 
       {/* Charts */}

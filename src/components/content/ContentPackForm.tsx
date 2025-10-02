@@ -5,7 +5,7 @@ interface ContentPackFormProps {
   pack?: {
     id: string;
     name: string;
-    game_key: 'who_among_us' | 'agree_disagree' | 'guess_the_person';
+    game_key: 'who_among_us' | 'agree_disagree' | 'guess_the_person' | 'football_trivia' | 'football_logos' | 'football_players' | 'football_moments';
     tags: string[] | null;
     state: string | null;
   };
@@ -61,6 +61,10 @@ export function ContentPackForm({ pack, onSubmit, onCancel, isLoading }: Content
           <option value="who_among_us">{t('content.games.who_among_us')}</option>
           <option value="agree_disagree">{t('content.games.agree_disagree')}</option>
           <option value="guess_the_person">{t('content.games.guess_the_person')}</option>
+          <option value="football_trivia">{t('content.games.football_trivia')}</option>
+          <option value="football_logos">{t('content.games.football_logos')}</option>
+          <option value="football_players">{t('content.games.football_players')}</option>
+          <option value="football_moments">{t('content.games.football_moments')}</option>
         </select>
       </div>
 

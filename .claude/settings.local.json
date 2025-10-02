@@ -46,7 +46,21 @@
       "mcp__playwright__browser_select_option",
       "Bash(npm run build:*)",
       "Bash(true)",
-      "Read(//Users/mersall/Library/Application Support/Code/User/**)"
+      "Read(//Users/mersall/Library/Application Support/Code/User/**)",
+      "mcp__supabase__list_migrations",
+      "mcp__supabase__list_edge_functions",
+      "mcp__supabase__get_edge_function",
+      "mcp__supabase__deploy_edge_function",
+      "Bash(for file in /Users/mersall/Desktop/Mersall/clika_dashboard/src/hooks/*.ts)",
+      "Bash(do if ! grep -q \"staleTime\" \"$file\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(for url in 120 609 617 79 1737 1742)",
+      "Bash(do echo \"Testing $url:\")",
+      "Bash(for id in 11 12 13 14 15)",
+      "Bash(do echo \"Testing ID $id:\")",
+      "WebSearch",
+      "Bash(git add:*)"
     ],
     "deny": []
   },

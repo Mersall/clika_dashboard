@@ -141,6 +141,14 @@ export function ContentPackItems({ pack, onClose }: ContentPackItemsProps) {
         return item.payload?.statement || '';
       case 'guess_the_person':
         return item.payload?.clues?.[0] || '';
+      case 'football_trivia':
+        return item.payload?.question || '';
+      case 'football_logos':
+        return item.payload?.question || item.payload?.question_en || 'Which club is this?';
+      case 'football_players':
+        return item.payload?.player_name || item.payload?.description || '';
+      case 'football_moments':
+        return item.payload?.description || item.payload?.moment || '';
       default:
         return '';
     }
@@ -245,19 +253,28 @@ export function ContentPackItems({ pack, onClose }: ContentPackItemsProps) {
                     }}
                     className="mr-3"
                   />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      {getContentText(item)}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getDifficultyBadgeClass(item.difficulty_or_depth)}`}>
-                        {t(`content.levels.${item.difficulty_or_depth || '0'}`)}
-                      </span>
-                      {item.tags?.slice(0, 2).map((tag, index) => (
-                        <span key={index} className="text-xs text-gray-600 dark:text-gray-400">
-                          #{tag}
+                  <div className="flex-1 flex items-center gap-3">
+                    {item.game_key === 'football_logos' && item.payload?.logo_url && (
+                      <img
+                        src={item.payload.logo_url}
+                        alt={item.payload?.answer || 'Logo'}
+                        className="h-12 w-12 object-contain bg-gray-100 dark:bg-gray-800 rounded p-1 flex-shrink-0"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {getContentText(item)}
+                      </p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getDifficultyBadgeClass(item.difficulty_or_depth)}`}>
+                          {t(`content.levels.${item.difficulty_or_depth || '0'}`)}
                         </span>
-                      ))}
+                        {item.tags?.slice(0, 2).map((tag, index) => (
+                          <span key={index} className="text-xs text-gray-600 dark:text-gray-400">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </label>
@@ -285,19 +302,28 @@ export function ContentPackItems({ pack, onClose }: ContentPackItemsProps) {
                   key={item.id}
                   className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800"
                 >
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                      {getContentText(item)}
-                    </p>
-                    <div className="mt-1 flex items-center gap-2">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getDifficultyBadgeClass(item.difficulty_or_depth)}`}>
-                        {t(`content.levels.${item.difficulty_or_depth || '0'}`)}
-                      </span>
-                      {item.tags?.slice(0, 2).map((tag, index) => (
-                        <span key={index} className="text-xs text-gray-600 dark:text-gray-400">
-                          #{tag}
+                  <div className="flex-1 flex items-center gap-3">
+                    {item.game_key === 'football_logos' && item.payload?.logo_url && (
+                      <img
+                        src={item.payload.logo_url}
+                        alt={item.payload?.answer || 'Logo'}
+                        className="h-12 w-12 object-contain bg-gray-100 dark:bg-gray-800 rounded p-1 flex-shrink-0"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {getContentText(item)}
+                      </p>
+                      <div className="mt-1 flex items-center gap-2">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getDifficultyBadgeClass(item.difficulty_or_depth)}`}>
+                          {t(`content.levels.${item.difficulty_or_depth || '0'}`)}
                         </span>
-                      ))}
+                        {item.tags?.slice(0, 2).map((tag, index) => (
+                          <span key={index} className="text-xs text-gray-600 dark:text-gray-400">
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   <button

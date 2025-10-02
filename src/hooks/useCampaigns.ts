@@ -30,12 +30,18 @@ export const useCampaigns = () => {
 
       if (error) {
         console.error('Error fetching campaigns:', error);
-        toast.error('Failed to fetch campaigns');
-        throw error;
+        // Don't throw error - return empty array to prevent infinite loading
+        // This could be due to RLS policies or missing table
+        return [] as Campaign[];
       }
 
+      console.log(`Fetched ${data?.length || 0} campaigns`);
       return data as Campaign[];
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes (renamed from cacheTime)
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 };
 

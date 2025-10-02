@@ -32,13 +32,18 @@ export const useContent = (gameKey?: string) => {
 
       if (error) {
         console.error('Error fetching content:', error);
-        toast.error(`Failed to fetch content: ${error.message}`);
-        throw error;
+        // Don't throw error - return empty array to prevent infinite loading
+        // This could be due to RLS policies or missing permissions
+        return [] as ContentItem[];
       }
 
       console.log(`Fetched ${data?.length || 0} content items for game: ${gameKey || 'all'}`);
       return data as ContentItem[];
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes (renamed from cacheTime)
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 };
 

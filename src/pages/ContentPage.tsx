@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { PlusIcon, PencilIcon, TrashIcon, MagnifyingGlassIcon, CheckCircleIcon, XCircleIcon, ArrowDownTrayIcon, ClipboardDocumentCheckIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, MagnifyingGlassIcon, CheckCircleIcon, XCircleIcon, ArrowDownTrayIcon, ClipboardDocumentCheckIcon, PlayIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useContent, useCreateContent, useUpdateContent, useDeleteContent, type ContentItem } from '../hooks/useContent';
@@ -15,6 +15,7 @@ import { toast } from 'react-hot-toast';
 import { useRealtimeSubscription } from '../hooks/useRealtimeSubscription';
 import { useExport } from '../hooks/useExport';
 import { HelpTooltip } from '../components/ui/HelpTooltip';
+import { FootballLogo } from '../components/ui/FootballLogo';
 
 export function ContentPage() {
   const { t } = useTranslation();
@@ -23,6 +24,10 @@ export function ContentPage() {
     { value: 'who_among_us', label: t('content.games.who_among_us') },
     { value: 'agree_disagree', label: t('content.games.agree_disagree') },
     { value: 'guess_the_person', label: t('content.games.guess_the_person') },
+    { value: 'football_trivia', label: t('content.games.football_trivia') },
+    { value: 'football_logos', label: t('content.games.football_logos') },
+    { value: 'football_players', label: t('content.games.football_players') },
+    { value: 'football_moments', label: t('content.games.football_moments') },
   ];
   const [selectedGame, setSelectedGame] = useState<string>('all');
   const [showModal, setShowModal] = useState(false);
@@ -37,24 +42,39 @@ export function ContentPage() {
   const updateMutation = useUpdateContent();
   const deleteMutation = useDeleteContent();
   const { confirm, ConfirmDialogComponent } = useConfirm();
+
+  // Handle Go Live action
+  const handleGoLive = async (item: ContentItem) => {
+    try {
+      await updateMutation.mutateAsync({
+        id: item.id,
+        status: 'live',
+        active: true,
+      });
+      toast.success(t('content.publishSuccess') || 'Content published successfully');
+    } catch (error) {
+      toast.error(t('content.publishError') || 'Failed to publish content');
+      console.error('Go live error:', error);
+    }
+  };
   const { exportData } = useExport();
   
-  // Real-time subscriptions
-  useRealtimeSubscription({
-    table: 'content_item',
-    event: '*',
-    queryKey: ['content', selectedGame],
-    onUpdate: (payload) => {
-      const action = payload.eventType;
-      if (action === 'INSERT') {
-        toast.success(t('content.toast.created'));
-      } else if (action === 'UPDATE') {
-        toast.success(t('content.toast.updated'));
-      } else if (action === 'DELETE') {
-        toast.success(t('content.toast.deleted'));
-      }
-    },
-  });
+  // Real-time subscriptions - temporarily disabled to debug loading issue
+  // useRealtimeSubscription({
+  //   table: 'content_item',
+  //   event: '*',
+  //   queryKey: ['content', selectedGame],
+  //   onUpdate: (payload) => {
+  //     const action = payload.eventType;
+  //     if (action === 'INSERT') {
+  //       toast.success(t('content.toast.created'));
+  //     } else if (action === 'UPDATE') {
+  //       toast.success(t('content.toast.updated'));
+  //     } else if (action === 'DELETE') {
+  //       toast.success(t('content.toast.deleted'));
+  //     }
+  //   },
+  // });
 
   const getDepthLabel = (depth: string | null) => {
     if (!depth) return t('common.unknown') || 'Unknown';
@@ -72,10 +92,17 @@ export function ContentPage() {
       if (!searchQuery.trim()) return true;
       
       const query = searchQuery.toLowerCase();
-      const content = (item.payload?.question || item.payload?.statement || item.payload?.person_name || '').toLowerCase();
+      const content = (
+        item.payload?.question ||
+        item.payload?.statement ||
+        item.payload?.persona?.name ||
+        item.payload?.persona?.name_en ||
+        item.payload?.person_name ||
+        ''
+      ).toLowerCase();
       const tags = item.tags?.join(' ').toLowerCase() || '';
       const gameType = item.game_key.toLowerCase();
-      
+
       return content.includes(query) || tags.includes(query) || gameType.includes(query);
     });
     
@@ -132,7 +159,7 @@ export function ContentPage() {
                 const dataToExport = filteredItems.map(item => ({
                   id: item.id,
                   game: gameOptions.find(g => g.value === item.game_key)?.label || item.game_key,
-                  content: item.payload?.question || item.payload?.statement || item.payload?.person_name || '',
+                  content: item.payload?.question || item.payload?.statement || item.payload?.persona?.name || item.payload?.persona?.name_en || item.payload?.person_name || '',
                   difficulty: getDepthLabel(item.difficulty_or_depth),
                   tags: item.tags?.join(', ') || '',
                   status: item.active ? t('content.status.active') : t('content.status.inactive'),
@@ -314,8 +341,28 @@ export function ContentPage() {
                     />
                   </td>
                   <td className="max-w-md">
-                    <div className="truncate text-gray-800 dark:text-gray-300">
-                      {item.payload?.question || item.payload?.statement || t('common.na')}
+                    <div className="flex items-center gap-2">
+                      {item.game_key === 'football_logos' && (
+                        <FootballLogo
+                          logoUrl={item.payload?.logo_url}
+                          teamName={item.payload?.answer_en || item.payload?.answer}
+                          className="h-10 w-10"
+                        />
+                      )}
+                      <div className="truncate text-gray-800 dark:text-gray-300">
+                        {item.payload?.question ||
+                         item.payload?.statement ||
+                         item.payload?.persona?.name ||
+                         item.payload?.persona?.name_en ||
+                         item.payload?.team_name ||
+                         item.payload?.club_name ||
+                         item.payload?.player_name ||
+                         item.payload?.name ||
+                         item.payload?.moment_description ||
+                         item.payload?.description ||
+                         item.payload?.question_en ||
+                         t('common.na')}
+                      </div>
                     </div>
                   </td>
                   <td>
@@ -343,16 +390,34 @@ export function ContentPage() {
                     </div>
                   </td>
                   <td>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      item.active 
-                        ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' 
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                    }`}>
-                      {item.active ? t('content.status.active') : t('content.status.inactive')}
-                    </span>
+                    <div className="flex gap-1">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        item.status === 'live'
+                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                          : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
+                      }`}>
+                        {item.status === 'live' ? t('content.status.live') || 'Live' : t('content.status.draft') || 'Draft'}
+                      </span>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        item.active
+                          ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                      }`}>
+                        {item.active ? t('content.status.active') : t('content.status.inactive')}
+                      </span>
+                    </div>
                   </td>
                   <td>
                     <div className="flex gap-2">
+                      {(item.status !== 'live' || !item.active) && (
+                        <button
+                          onClick={() => handleGoLive(item)}
+                          className="text-gray-600 dark:text-gray-400 hover:text-green-600 transition-colors"
+                          title={t('content.goLive') || 'Go Live'}
+                        >
+                          <PlayIcon className="h-4 w-4" />
+                        </button>
+                      )}
                       <button
                         onClick={() => {
                           setEditingItem(item);
@@ -432,14 +497,41 @@ export function ContentPage() {
                         {gameOptions.find((g) => g.value === item.game_key)?.label || item.game_key}
                       </span>
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                        item.status === 'live'
+                          ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200'
+                          : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
+                      }`}>
+                        {item.status === 'live' ? 'Live' : 'Draft'}
+                      </span>
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                         item.active ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                       }`}>
                         {item.active ? t('common.active') : t('common.inactive')}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2 mb-2">
-                      {item.payload?.question || item.payload?.statement || t('common.na')}
-                    </p>
+                    <div className="flex items-start gap-2 mb-2">
+                      {item.game_key === 'football_logos' && (
+                        <FootballLogo
+                          logoUrl={item.payload?.logo_url}
+                          teamName={item.payload?.answer_en || item.payload?.answer}
+                          className="h-16 w-16"
+                        />
+                      )}
+                      <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">
+                        {item.payload?.question ||
+                         item.payload?.statement ||
+                         item.payload?.persona?.name ||
+                         item.payload?.persona?.name_en ||
+                         item.payload?.team_name ||
+                         item.payload?.club_name ||
+                         item.payload?.player_name ||
+                         item.payload?.name ||
+                         item.payload?.moment_description ||
+                         item.payload?.description ||
+                         item.payload?.question_en ||
+                         t('common.na')}
+                      </p>
+                    </div>
                     <div className="flex flex-wrap gap-1 mb-2">
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
                         {getDepthLabel(item.difficulty_or_depth)}
@@ -452,6 +544,15 @@ export function ContentPage() {
                     </div>
                   </div>
                   <div className="flex gap-2 ml-2">
+                    {(item.status !== 'live' || !item.active) && (
+                      <button
+                        onClick={() => handleGoLive(item)}
+                        className="text-gray-600 dark:text-gray-400 hover:text-green-600 transition-colors p-1"
+                        title={t('content.goLive') || 'Go Live'}
+                      >
+                        <PlayIcon className="h-4 w-4" />
+                      </button>
+                    )}
                     <button
                       onClick={() => {
                         setEditingItem(item);

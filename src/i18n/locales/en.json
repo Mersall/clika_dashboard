@@ -91,7 +91,11 @@
     "games": {
       "who_among_us": "Who Among Us?",
       "agree_disagree": "Agree/Disagree",
-      "guess_the_person": "Guess the Person"
+      "guess_the_person": "Guess the Person",
+      "football_trivia": "Football Trivia",
+      "football_logos": "Football Logos",
+      "football_players": "Football Players",
+      "football_moments": "Football Moments"
     },
     "noContent": "No content found",
     "noMatch": "No content matches your search",
@@ -444,7 +448,11 @@
     "games": {
       "who_among_us": "Who Among Us?",
       "agree_disagree": "Agree/Disagree",
-      "guess_the_person": "Guess the Person"
+      "guess_the_person": "Guess the Person",
+      "football_trivia": "Football Trivia",
+      "football_logos": "Football Logos",
+      "football_players": "Football Players",
+      "football_moments": "Football Moments"
     },
     "gameConfig": {
       "enableGame": "Enable game",

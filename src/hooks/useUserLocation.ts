@@ -37,8 +37,8 @@ export const useUserLocations = () => {
 
       if (error) {
         console.error('Error fetching user locations:', error);
-        toast.error('Failed to fetch user locations');
-        throw error;
+        // Return empty array if RLS policies prevent access
+        return [] as UserLocation[];
       }
 
       return data as UserLocation[];
@@ -56,8 +56,15 @@ export const useLocationStats = () => {
 
       if (error) {
         console.error('Error fetching location stats:', error);
-        toast.error('Failed to fetch location statistics');
-        throw error;
+        // Return default stats if RLS policies prevent access
+        return {
+          totalUsers: 0,
+          usersWithLocation: 0,
+          geoConsentGiven: 0,
+          adsConsentGiven: 0,
+          countryDistribution: {},
+          consentTrends: generateConsentTrends(),
+        } as LocationStats;
       }
 
       // Calculate statistics

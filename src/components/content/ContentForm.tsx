@@ -23,6 +23,34 @@ const depthOptions = [
   { value: '4', label: 'L4 - Spicy' },
 ];
 
+const domainOptions = [
+  { value: 'relationships', label: 'Relationships' },
+  { value: 'habits', label: 'Habits' },
+  { value: 'memories', label: 'Memories' },
+  { value: 'dreams', label: 'Dreams' },
+  { value: 'opinions', label: 'Opinions' },
+  { value: 'experiences', label: 'Experiences' },
+  { value: 'emotions', label: 'Emotions' },
+  { value: 'culture', label: 'Culture' },
+];
+
+const eraOptions = [
+  { value: 'past', label: 'Past' },
+  { value: 'present', label: 'Present' },
+  { value: 'future', label: 'Future' },
+  { value: 'timeless', label: 'Timeless' },
+];
+
+const moodOptions = [
+  { value: 'funny', label: 'Funny' },
+  { value: 'serious', label: 'Serious' },
+  { value: 'nostalgic', label: 'Nostalgic' },
+  { value: 'provocative', label: 'Provocative' },
+  { value: 'heartwarming', label: 'Heartwarming' },
+  { value: 'challenging', label: 'Challenging' },
+  { value: 'playful', label: 'Playful' },
+];
+
 export function ContentForm({ initialValues, onSubmit, onCancel }: ContentFormProps) {
   const [formData, setFormData] = useState({
     game_key: initialValues?.game_key || 'who_among_us',
@@ -31,6 +59,11 @@ export function ContentForm({ initialValues, onSubmit, onCancel }: ContentFormPr
     similarity_group: initialValues?.similarity_group || '',
     active: initialValues?.active ?? true,
     status: initialValues?.status || 'draft',
+    domain: initialValues?.domain || '',
+    era: initialValues?.era || '',
+    mood: initialValues?.mood || '',
+    theme_category: initialValues?.theme_category || '',
+    is_premium: initialValues?.is_premium ?? false,
     payload: {
       question: initialValues?.payload?.question || '',
       question_en: initialValues?.payload?.question_en || '',
@@ -65,6 +98,11 @@ export function ContentForm({ initialValues, onSubmit, onCancel }: ContentFormPr
       similarity_group: formData.similarity_group || null,
       active: formData.active,
       status: formData.status as any,
+      domain: formData.domain || null,
+      era: formData.era || null,
+      mood: formData.mood || null,
+      theme_category: formData.theme_category || null,
+      is_premium: formData.is_premium,
       payload,
     });
   };
@@ -103,6 +141,88 @@ export function ContentForm({ initialValues, onSubmit, onCancel }: ContentFormPr
             </option>
           ))}
         </select>
+      </div>
+
+      {/* New metadata fields */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Domain
+          </label>
+          <select
+            value={formData.domain}
+            onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
+            className="input"
+          >
+            <option value="">Select Domain</option>
+            {domainOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Era
+          </label>
+          <select
+            value={formData.era}
+            onChange={(e) => setFormData({ ...formData, era: e.target.value })}
+            className="input"
+          >
+            <option value="">Select Era</option>
+            {eraOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Mood
+          </label>
+          <select
+            value={formData.mood}
+            onChange={(e) => setFormData({ ...formData, mood: e.target.value })}
+            className="input"
+          >
+            <option value="">Select Mood</option>
+            {moodOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-300 mb-1">
+            Theme Category
+          </label>
+          <input
+            type="text"
+            value={formData.theme_category}
+            onChange={(e) => setFormData({ ...formData, theme_category: e.target.value })}
+            className="input"
+            placeholder="e.g., family, work, travel"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            checked={formData.is_premium}
+            onChange={(e) => setFormData({ ...formData, is_premium: e.target.checked })}
+            className="mr-2"
+          />
+          <span className="text-sm text-gray-300">Premium Content</span>
+        </label>
       </div>
 
       {/* Game-specific fields */}

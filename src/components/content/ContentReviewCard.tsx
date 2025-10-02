@@ -4,6 +4,7 @@ import type { ContentItem } from '../../hooks/useContent';
 import { RequestChangesModal } from './RequestChangesModal';
 import { EditContentModal } from './EditContentModal';
 import { useTranslation } from 'react-i18next';
+import { FootballLogo } from '../ui/FootballLogo';
 
 interface ContentReviewCardProps {
   item: ContentItem;
@@ -18,6 +19,10 @@ const gameLabels: Record<string, string> = {
   who_among_us: 'Who Among Us?',
   agree_disagree: 'Agree/Disagree',
   guess_the_person: 'Guess the Person',
+  football_trivia: 'Football Trivia',
+  football_logos: 'Football Logos',
+  football_players: 'Football Players',
+  football_moments: 'Football Moments',
 };
 
 export function ContentReviewCard({
@@ -38,6 +43,14 @@ export function ContentReviewCard({
       return item.payload?.statement || 'No statement';
     } else if (item.game_key === 'guess_the_person') {
       return item.payload?.persona?.name || item.payload?.person_name || 'No person';
+    } else if (item.game_key === 'football_trivia') {
+      return item.payload?.question || item.payload?.question_en || 'No question';
+    } else if (item.game_key === 'football_logos') {
+      return item.payload?.question || item.payload?.question_en || 'Which club is this?';
+    } else if (item.game_key === 'football_players') {
+      return `Guess the player: ${item.payload?.answer || item.payload?.answer_ar || 'Unknown'}`;
+    } else if (item.game_key === 'football_moments') {
+      return item.payload?.moment_description || item.payload?.description || item.payload?.question || 'No moment';
     }
     return 'Unknown content';
   };
@@ -65,6 +78,16 @@ export function ContentReviewCard({
         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
           {getContentText()}
         </h3>
+
+        {item.game_key === 'football_logos' && (
+          <div className="mb-3">
+            <FootballLogo
+              logoUrl={item.payload?.logo_url}
+              teamName={item.payload?.answer_en || item.payload?.answer}
+              className="h-32 w-32"
+            />
+          </div>
+        )}
         
         {item.game_key === 'guess_the_person' && (item.payload?.persona?.clues || item.payload?.clues) && (
           <div className="mb-2">
@@ -74,6 +97,50 @@ export function ContentReviewCard({
                 <li key={index}>{clue}</li>
               ))}
             </ul>
+          </div>
+        )}
+
+        {item.game_key === 'football_trivia' && item.payload?.answer && (
+          <div className="mb-2">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="font-medium">Answer:</span> {item.payload.answer}
+            </p>
+            {item.payload.category && (
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                <span className="font-medium">Category:</span> {item.payload.category}
+              </p>
+            )}
+          </div>
+        )}
+
+        {item.game_key === 'football_players' && (item.payload?.hints_ar || item.payload?.hints) && (
+          <div className="mb-2">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">التلميحات:</p>
+            <ul className="list-disc list-inside text-sm text-gray-700 dark:text-gray-300" dir="rtl">
+              {(item.payload.hints_ar || item.payload.hints)?.map((hint: string, index: number) => (
+                <li key={index}>{hint}</li>
+              ))}
+            </ul>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+              <span className="font-medium">الإجابة:</span> {item.payload.answer_ar || item.payload.answer}
+            </p>
+          </div>
+        )}
+
+        {(item.game_key === 'football_logos' || item.game_key === 'football_moments') && item.payload && (
+          <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">
+            {item.payload.answer && (
+              <p><span className="font-medium">Answer:</span> {item.payload.answer}</p>
+            )}
+            {item.payload.category && (
+              <p><span className="font-medium">Category:</span> {item.payload.category}</p>
+            )}
+            {item.payload.league && (
+              <p><span className="font-medium">League:</span> {item.payload.league}</p>
+            )}
+            {item.payload.year && (
+              <p><span className="font-medium">Year:</span> {item.payload.year}</p>
+            )}
           </div>
         )}
         
@@ -99,9 +166,18 @@ export function ContentReviewCard({
         <div className="flex flex-col gap-2">
           {/* Primary Actions */}
           <div className="flex gap-2">
-            {/* Draft & In Review: Approve/Reject */}
+            {/* Draft & In Review: Go Live/Approve/Reject */}
             {(item.status === 'draft' || item.status === 'in_review') && (
               <>
+                <button
+                  onClick={() => onGoLive(item.id)}
+                  className="btn btn-primary btn-sm flex-1 justify-center"
+                  title={t('contentReview.goLiveDirectly') || 'Publish directly to live'}
+                >
+                  <PlayIcon className="h-4 w-4 ltr:mr-1 rtl:ml-1" />
+                  <span className="hidden sm:inline">{t('contentReview.goLive')}</span>
+                  <span className="sm:hidden">{t('contentReview.goLive')}</span>
+                </button>
                 <button
                   onClick={() => onApprove(item.id)}
                   className="btn btn-success btn-sm flex-1 justify-center"

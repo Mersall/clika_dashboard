@@ -17,9 +17,17 @@ export function SortableTableHeader({
 }: SortableTableHeaderProps) {
   return (
     <th className={className}>
-      <button
-        className="group inline-flex items-center gap-1 text-left font-medium text-gray-300 hover:text-gray-100"
+      <div
+        className="group inline-flex items-center gap-1 text-left font-medium text-gray-300 hover:text-gray-100 cursor-pointer"
         onClick={() => onSort(sortKey)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onSort(sortKey);
+          }
+        }}
       >
         {label}
         <span className="ml-1 flex-none">
@@ -33,7 +41,7 @@ export function SortableTableHeader({
             <ChevronDownIcon className="h-4 w-4 text-primary-500" />
           )}
         </span>
-      </button>
+      </div>
     </th>
   );
 }

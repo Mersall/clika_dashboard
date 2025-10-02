@@ -40,41 +40,46 @@ export const useRounds = (filters?: {
   return useQuery({
     queryKey: ['rounds', filters],
     queryFn: async () => {
-      let query = supabase
-        .from('round')
-        .select(`
-          *,
-          session:session_id (
-            game_key,
-            user_id,
-            device_id
-          ),
-          content:item_id (
-            game_key,
-            payload,
-            difficulty_or_depth
-          )
-        `)
-        .order('started_at', { ascending: false })
-        .limit(100);
+      try {
+        let query = supabase
+          .from('round')
+          .select('*')
+          .order('started_at', { ascending: false })
+          .limit(100);
 
-      if (filters?.dateFrom) {
-        query = query.gte('started_at', filters.dateFrom.toISOString());
+        if (filters?.dateFrom) {
+          query = query.gte('started_at', filters.dateFrom.toISOString());
+        }
+        if (filters?.dateTo) {
+          query = query.lte('started_at', filters.dateTo.toISOString());
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+          // Check if it's a permission error
+          if (error.code === '42501' || error.message?.includes('permission') || error.message?.includes('RLS')) {
+            console.warn('Permission denied for rounds table, returning empty data');
+            return [];
+          }
+          console.error('Error fetching rounds:', error);
+          // Don't show toast for permission errors
+          if (!error.message?.includes('permission')) {
+            toast.error('Failed to fetch rounds');
+          }
+          return [];
+        }
+
+        return data as Round[];
+      } catch (err) {
+        console.error('Unexpected error fetching rounds:', err);
+        return [];
       }
-      if (filters?.dateTo) {
-        query = query.lte('started_at', filters.dateTo.toISOString());
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Error fetching rounds:', error);
-        toast.error('Failed to fetch rounds');
-        throw error;
-      }
-
-      return data as Round[];
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 };
 
@@ -102,21 +107,42 @@ export const useRoundStats = (filters?: {
       const { data: rounds, count, error: statsError } = await statsQuery;
 
       if (statsError) {
+        // Handle permission errors gracefully
+        if (statsError.code === '42501' || statsError.message?.includes('permission') || statsError.message?.includes('RLS')) {
+          console.warn('Permission denied for round stats, returning default data');
+          return {
+            totalRounds: 0,
+            uniqueSessions: 0,
+            avgRoundTime: 0,
+            roundsWithWinners: 0,
+            decisionBreakdown: {},
+            gameBreakdown: {},
+            timeDistribution: [
+              { range: '0-10s', count: 0 },
+              { range: '10-30s', count: 0 },
+              { range: '30-60s', count: 0 },
+              { range: '1-2m', count: 0 },
+              { range: '2m+', count: 0 }
+            ]
+          } as RoundStats;
+        }
         console.error('Error fetching round stats:', statsError);
-        toast.error('Failed to fetch round statistics');
+        if (!statsError.message?.includes('permission')) {
+          toast.error('Failed to fetch round statistics');
+        }
         throw statsError;
       }
 
-      // Get game breakdown
-      let gameQuery = supabase.rpc('get_round_game_breakdown', {
-        start_date: filters?.dateFrom?.toISOString() || '2020-01-01',
-        end_date: filters?.dateTo?.toISOString() || new Date().toISOString()
-      });
+      // Get game breakdown - fetch sessions to get game_key
+      let sessionsQuery = supabase
+        .from('session')
+        .select('id, game_key')
+        .in('id', Array.from(new Set(rounds?.map(r => r.session_id) || [])));
 
-      const { data: gameBreakdown, error: gameError } = await gameQuery;
+      const { data: sessions, error: sessionError } = await sessionsQuery;
 
-      if (gameError) {
-        console.error('Error fetching game breakdown:', gameError);
+      if (sessionError) {
+        console.error('Error fetching sessions for game breakdown:', sessionError);
       }
 
       // Calculate stats from rounds data
@@ -149,13 +175,20 @@ export const useRoundStats = (filters?: {
         }).length || 0
       }));
 
-      // Game breakdown from RPC or fallback
+      // Create session to game_key map
+      const sessionGameMap: Record<string, string> = {};
+      sessions?.forEach((session: any) => {
+        sessionGameMap[session.id] = session.game_key;
+      });
+
+      // Game breakdown from sessions
       const gameBreakdownMap: Record<string, number> = {};
-      if (gameBreakdown && Array.isArray(gameBreakdown)) {
-        gameBreakdown.forEach((item: any) => {
-          gameBreakdownMap[item.game_key] = item.count;
-        });
-      }
+      rounds?.forEach(r => {
+        const gameKey = sessionGameMap[r.session_id];
+        if (gameKey) {
+          gameBreakdownMap[gameKey] = (gameBreakdownMap[gameKey] || 0) + 1;
+        }
+      });
 
       return {
         totalRounds: count || 0,
@@ -167,6 +200,10 @@ export const useRoundStats = (filters?: {
         timeDistribution
       } as RoundStats;
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 };
 
@@ -174,17 +211,56 @@ export const useRoundsByGame = () => {
   return useQuery({
     queryKey: ['rounds-by-game'],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_round_game_breakdown', {
-        start_date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-        end_date: new Date().toISOString()
-      });
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
-      if (error) {
-        console.error('Error fetching rounds by game:', error);
-        throw error;
+      // Get recent rounds with their sessions
+      const { data: rounds, error: roundError } = await supabase
+        .from('round')
+        .select('session_id')
+        .gte('started_at', thirtyDaysAgo)
+        .limit(1000);
+
+      if (roundError) {
+        if (roundError.code === '42501' || roundError.message?.includes('permission') || roundError.message?.includes('RLS')) {
+          console.warn('Permission denied for rounds by game, returning empty data');
+          return [];
+        }
+        console.error('Error fetching rounds:', roundError);
+        return [];
       }
 
-      return data;
+      // Get unique session IDs
+      const sessionIds = Array.from(new Set(rounds?.map(r => r.session_id) || []));
+
+      if (sessionIds.length === 0) return [];
+
+      // Get sessions with game_key
+      const { data: sessions, error: sessionError } = await supabase
+        .from('session')
+        .select('id, game_key')
+        .in('id', sessionIds);
+
+      if (sessionError) {
+        console.error('Error fetching sessions:', sessionError);
+        throw sessionError;
+      }
+
+      // Count rounds per game
+      const gameCountMap: Record<string, number> = {};
+      sessions?.forEach(session => {
+        const roundsForSession = rounds?.filter(r => r.session_id === session.id).length || 0;
+        gameCountMap[session.game_key] = (gameCountMap[session.game_key] || 0) + roundsForSession;
+      });
+
+      // Format as array
+      return Object.entries(gameCountMap).map(([game_key, count]) => ({
+        game_key,
+        count
+      }));
     },
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: false,
+    retry: 1,
   });
 };

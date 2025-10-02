@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 export function ContentReviewPage() {
   const { t } = useTranslation();
   const { isReviewer, loading: roleLoading } = useUserRole();
-  
+
   const statusTabs = [
     { value: 'draft', label: t('content.status.draft'), color: 'bg-gray-500' },
     { value: 'in_review', label: t('content.status.inReview'), color: 'bg-amber-500' },
@@ -18,8 +18,21 @@ export function ContentReviewPage() {
     { value: 'paused', label: t('content.status.paused'), color: 'bg-yellow-600' },
     { value: 'archived', label: t('content.status.archived'), color: 'bg-red-600' },
   ];
+
+  const gameOptions = [
+    { value: 'all', label: t('content.allGames') },
+    { value: 'who_among_us', label: t('content.games.who_among_us') },
+    { value: 'agree_disagree', label: t('content.games.agree_disagree') },
+    { value: 'guess_the_person', label: t('content.games.guess_the_person') },
+    { value: 'football_trivia', label: t('content.games.football_trivia') },
+    { value: 'football_logos', label: t('content.games.football_logos') },
+    { value: 'football_players', label: t('content.games.football_players') },
+    { value: 'football_moments', label: t('content.games.football_moments') },
+  ];
+
   const [selectedStatus, setSelectedStatus] = useState('draft');
-  const { data: items, isLoading } = useContent('all');
+  const [selectedGame, setSelectedGame] = useState('all');
+  const { data: items, isLoading } = useContent(selectedGame);
   const updateMutation = useUpdateContent();
 
   // Wait for role to load
@@ -129,6 +142,21 @@ export function ContentReviewPage() {
       <div className="mb-6 sm:mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{t('contentReview.title')}</h1>
         <p className="mt-2 text-gray-600 dark:text-gray-400 text-sm sm:text-base">{t('contentReview.subtitle')}</p>
+      </div>
+
+      {/* Game Filter */}
+      <div className="mb-4">
+        <select
+          value={selectedGame}
+          onChange={(e) => setSelectedGame(e.target.value)}
+          className="input select w-full sm:w-64"
+        >
+          {gameOptions.map((game) => (
+            <option key={game.value} value={game.value}>
+              {game.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Status Tabs */}

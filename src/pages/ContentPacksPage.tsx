@@ -23,7 +23,7 @@ import { ContentPackItems } from '../components/content/ContentPackItems';
 interface ContentPack {
   id: string;
   name: string;
-  game_key: 'who_among_us' | 'agree_disagree' | 'guess_the_person';
+  game_key: 'who_among_us' | 'agree_disagree' | 'guess_the_person' | 'football_trivia' | 'football_logos' | 'football_players' | 'football_moments';
   tags: string[] | null;
   state: string | null;
   created_at: string;
@@ -172,6 +172,11 @@ export function ContentPacksPage() {
         return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
       case 'guess_the_person':
         return 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200';
+      case 'football_trivia':
+      case 'football_logos':
+      case 'football_players':
+      case 'football_moments':
+        return 'bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200';
       default:
         return 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300';
     }

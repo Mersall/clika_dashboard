@@ -20,6 +20,9 @@ export function SessionsPage() {
   const [selectedGame, setSelectedGame] = useState<string>('all');
   const [selectedDateRange, setSelectedDateRange] = useState<string>('7d');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [minRounds, setMinRounds] = useState<number>(0);
+  const [minDuration, setMinDuration] = useState<number>(0);
 
   // Fetch sessions with rounds count
   const { data: sessions, isLoading: sessionsLoading } = useQuery({
@@ -34,10 +37,7 @@ export function SessionsPage() {
 
       let query = supabase
         .from('session')
-        .select(`
-          *,
-          round!session_id (count)
-        `)
+        .select('*')
         .gte('started_at', dateFilter.toISOString())
         .order('started_at', { ascending: false })
         .limit(100);
@@ -46,10 +46,35 @@ export function SessionsPage() {
         query = query.eq('game_key', selectedGame);
       }
 
-      const { data, error } = await query;
-      if (error) throw error;
-      
-      return data as any[];
+      const { data: sessionData, error } = await query;
+      if (error) {
+        console.error('Error fetching sessions:', error);
+        throw error;
+      }
+
+      // Fetch round counts separately for each session
+      if (sessionData && sessionData.length > 0) {
+        const sessionIds = sessionData.map(s => s.id);
+        const { data: roundCounts, error: roundError } = await supabase
+          .from('round')
+          .select('session_id')
+          .in('session_id', sessionIds);
+
+        if (!roundError && roundCounts) {
+          const countMap = roundCounts.reduce((acc, round) => {
+            acc[round.session_id] = (acc[round.session_id] || 0) + 1;
+            return acc;
+          }, {} as Record<string, number>);
+
+          // Add round counts to sessions
+          return sessionData.map(session => ({
+            ...session,
+            round: [{ count: countMap[session.id] || 0 }]
+          }));
+        }
+      }
+
+      return sessionData || [];
     },
   });
 
@@ -127,25 +152,56 @@ export function SessionsPage() {
     },
   });
 
-  // Filter sessions based on search query
+  // Filter sessions based on search query and advanced filters
   const filteredSessions = useMemo(() => {
     if (!sessions) return [];
-    
-    if (!searchQuery.trim()) return sessions;
-    
-    const query = searchQuery.toLowerCase();
-    return sessions.filter((session: any) => {
-      const sessionId = session.id.toLowerCase();
-      const userId = session.user_id.toLowerCase();
-      const gameKey = session.game_key.toLowerCase();
-      const gameName = gameOptions.find(g => g.value === session.game_key)?.label.toLowerCase() || '';
-      
-      return sessionId.includes(query) || 
-             userId.includes(query) || 
-             gameKey.includes(query) ||
-             gameName.includes(query);
-    });
-  }, [sessions, searchQuery, gameOptions]);
+
+    let filtered = [...sessions];
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((session: any) => {
+        const sessionId = session.id.toLowerCase();
+        const userId = session.user_id.toLowerCase();
+        const gameKey = session.game_key.toLowerCase();
+        const gameName = gameOptions.find(g => g.value === session.game_key)?.label.toLowerCase() || '';
+
+        return sessionId.includes(query) ||
+               userId.includes(query) ||
+               gameKey.includes(query) ||
+               gameName.includes(query);
+      });
+    }
+
+    // Apply status filter
+    if (selectedStatus !== 'all') {
+      filtered = filtered.filter((session: any) => {
+        if (selectedStatus === 'active') return !session.ended_at;
+        if (selectedStatus === 'ended') return session.ended_at;
+        return true;
+      });
+    }
+
+    // Apply minimum rounds filter
+    if (minRounds > 0) {
+      filtered = filtered.filter((session: any) => {
+        const roundCount = session.round?.[0]?.count || 0;
+        return roundCount >= minRounds;
+      });
+    }
+
+    // Apply minimum duration filter (in minutes)
+    if (minDuration > 0) {
+      filtered = filtered.filter((session: any) => {
+        if (!session.ended_at) return false;
+        const duration = (new Date(session.ended_at).getTime() - new Date(session.started_at).getTime()) / 1000 / 60;
+        return duration >= minDuration;
+      });
+    }
+
+    return filtered;
+  }, [sessions, searchQuery, selectedStatus, minRounds, minDuration, gameOptions]);
 
   const totalSessions = filteredSessions?.length || 0;
   const activeSessions = filteredSessions?.filter(s => !s.ended_at).length || 0;
@@ -202,30 +258,58 @@ export function SessionsPage() {
         </div>
         
         {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-        <select
-          value={selectedGame}
-          onChange={(e) => setSelectedGame(e.target.value)}
-          className="input w-full sm:w-48"
-        >
-          <option value="all">{t('sessions.filters.allGames')}</option>
-          {gameOptions.map((game) => (
-            <option key={game.value} value={game.value}>
-              {game.label}
-            </option>
-          ))}
-        </select>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+          <select
+            value={selectedGame}
+            onChange={(e) => setSelectedGame(e.target.value)}
+            className="input"
+          >
+            <option value="all">{t('sessions.filters.allGames')}</option>
+            {gameOptions.map((game) => (
+              <option key={game.value} value={game.value}>
+                {game.label}
+              </option>
+            ))}
+          </select>
 
-        <select
-          value={selectedDateRange}
-          onChange={(e) => setSelectedDateRange(e.target.value)}
-          className="input w-full sm:w-48"
-        >
-          <option value="1d">{t('sessions.filters.last24Hours')}</option>
-          <option value="7d">{t('sessions.filters.last7Days')}</option>
-          <option value="30d">{t('sessions.filters.last30Days')}</option>
-          <option value="all">{t('sessions.filters.allTime')}</option>
-        </select>
+          <select
+            value={selectedDateRange}
+            onChange={(e) => setSelectedDateRange(e.target.value)}
+            className="input"
+          >
+            <option value="1d">{t('sessions.filters.last24Hours')}</option>
+            <option value="7d">{t('sessions.filters.last7Days')}</option>
+            <option value="30d">{t('sessions.filters.last30Days')}</option>
+            <option value="all">{t('sessions.filters.allTime')}</option>
+          </select>
+
+          <select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="input"
+          >
+            <option value="all">All Status</option>
+            <option value="active">Active</option>
+            <option value="ended">Ended</option>
+          </select>
+
+          <input
+            type="number"
+            value={minRounds}
+            onChange={(e) => setMinRounds(Number(e.target.value) || 0)}
+            placeholder="Min rounds (e.g. 5)"
+            className="input"
+            min="0"
+          />
+
+          <input
+            type="number"
+            value={minDuration}
+            onChange={(e) => setMinDuration(Number(e.target.value) || 0)}
+            placeholder="Min duration (minutes)"
+            className="input"
+            min="0"
+          />
         </div>
       </div>
 

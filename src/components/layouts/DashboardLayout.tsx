@@ -25,6 +25,10 @@ import {
   EyeIcon,
   DevicePhoneMobileIcon,
   ServerIcon,
+  ShoppingBagIcon,
+  ShoppingCartIcon,
+  BoltIcon,
+  WrenchIcon,
 } from '@heroicons/react/24/outline';
 import { LanguageSwitcher } from '../ui/LanguageSwitcher';
 import { HelpTooltip } from '../ui/HelpTooltip';
@@ -40,6 +44,10 @@ export function DashboardLayout() {
     { name: t('nav.home'), href: '/', icon: HomeIcon },
     { name: t('nav.content'), href: '/content', icon: DocumentTextIcon },
     { name: t('nav.contentPacks'), href: '/content-packs', icon: ArchiveBoxIcon },
+    { name: 'Pack Store', href: '/pack-store', icon: ShoppingBagIcon, requiredRole: 'admin' },
+    { name: 'Purchases', href: '/purchases', icon: ShoppingCartIcon, requiredRole: 'admin' },
+    { name: 'Edge Functions', href: '/edge-functions', icon: BoltIcon, requiredRole: 'admin' },
+    { name: '🔧 Fix Logos', href: '/fix-logos', icon: WrenchIcon, requiredRole: 'admin' },
     { name: t('nav.review'), href: '/content/review', icon: ClipboardDocumentCheckIcon, requiredRole: 'reviewer' },
     { name: t('nav.sessions'), href: '/sessions', icon: PlayIcon },
     { name: t('nav.deviceAnalytics'), href: '/device-analytics', icon: DevicePhoneMobileIcon },

@@ -186,11 +186,7 @@ export const useAdDeliveryStats = (dateRange?: { start: Date; end: Date }) => {
     queryFn: async () => {
       let query = supabase
         .from('ad_delivery_log')
-        .select(`
-          *,
-          ad_campaign!inner(name, status),
-          ad_creative!inner(text_lines)
-        `);
+        .select('*');
 
       if (dateRange) {
         query = query
@@ -210,11 +206,11 @@ export const useAdDeliveryStats = (dateRange?: { start: Date; end: Date }) => {
       const totalImpressions = deliveries?.length || 0;
       const uniqueUsers = new Set(deliveries?.map(d => d.user_id)).size;
       const campaignStats = deliveries?.reduce((acc, delivery) => {
-        const campaign = delivery.ad_campaign?.name || 'Unknown';
-        if (!acc[campaign]) {
-          acc[campaign] = 0;
+        const campaignId = delivery.campaign_id || 'Unknown';
+        if (!acc[campaignId]) {
+          acc[campaignId] = 0;
         }
-        acc[campaign]++;
+        acc[campaignId]++;
         return acc;
       }, {} as Record<string, number>) || {};
 

@@ -30,29 +30,50 @@ export function HomePage() {
       const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
       // Fetch various stats with proper error handling
-      const [
-        userResult,
-        sessionResult,
-        contentResult,
-        campaignResult
-      ] = await Promise.all([
-        supabase.rpc('get_user_profiles_count'),
-        supabase.from('session').select('*', { count: 'exact', head: true }).gte('started_at', today),
-        supabase.from('content_item').select('*', { count: 'exact', head: true }).eq('active', true),
-        supabase.from('ad_campaign').select('*', { count: 'exact', head: true }).eq('status', 'active'),
-      ]);
+      // Use separate queries to handle RLS policies better
 
-      // Log any errors for debugging
-      if (userResult.error) console.error('User count error:', userResult.error);
-      if (sessionResult.error) console.error('Session count error:', sessionResult.error);
-      if (contentResult.error) console.error('Content count error:', contentResult.error);
-      if (campaignResult.error) console.error('Campaign count error:', campaignResult.error);
+      // Get user count
+      const { data: users, error: userError } = await supabase
+        .from('user_profile')
+        .select('user_id');
+      if (userError) console.error('User count error:', userError);
+      const totalUsers = users?.length || 0;
+
+      // Get today's sessions
+      const { data: todaySessions, error: sessionError } = await supabase
+        .from('session')
+        .select('id')
+        .gte('started_at', today + 'T00:00:00');
+      if (sessionError) console.error('Session count error:', sessionError);
+      const totalSessions = todaySessions?.length || 0;
+
+      // Get active content
+      const { data: activeContent, error: contentError } = await supabase
+        .from('content_item')
+        .select('id')
+        .eq('active', true);
+      if (contentError) console.error('Content count error:', contentError);
+      const totalContent = activeContent?.length || 0;
+
+      // Get active campaigns - this might fail if table doesn't exist
+      let activeCampaigns = 0;
+      try {
+        const { data: campaigns, error: campaignError } = await supabase
+          .from('ad_campaign')
+          .select('id')
+          .eq('status', 'active');
+        if (!campaignError && campaigns) {
+          activeCampaigns = campaigns.length;
+        }
+      } catch {
+        // Table might not exist, ignore
+      }
 
       return {
-        totalUsers: userResult.data || userResult.count || 0,
-        totalSessions: sessionResult.count || 0,
-        totalContent: contentResult.count || 0,
-        activeCampaigns: campaignResult.count || 0,
+        totalUsers,
+        totalSessions,
+        totalContent,
+        activeCampaigns,
       };
     },
   });
@@ -217,10 +238,15 @@ export function HomePage() {
                 {topContent.map((content: any) => (
                   <div key={content.id} className="text-xs sm:text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-900 dark:text-gray-100">
-                        {content.payload?.question || content.payload?.statement || 'No content'}
+                      <span className="text-gray-900 dark:text-gray-100 truncate pr-2">
+                        {content.payload?.question ||
+                         content.payload?.statement ||
+                         content.payload?.persona?.name ||
+                         content.payload?.persona?.name_en ||
+                         content.payload?.person_name ||
+                         'No content'}
                       </span>
-                      <span className="text-gray-500">
+                      <span className="text-gray-500 flex-shrink-0">
                         {content.game_key.replace(/_/g, ' ')}
                       </span>
                     </div>

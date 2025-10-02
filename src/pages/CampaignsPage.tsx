@@ -36,22 +36,22 @@ export function CampaignsPage() {
   const { confirm, ConfirmDialogComponent } = useConfirm();
   const { exportData } = useExport();
   
-  // Real-time subscriptions
-  useRealtimeSubscription({
-    table: 'ad_campaign',
-    event: '*',
-    queryKey: ['campaigns'],
-    onUpdate: (payload) => {
-      const action = payload.eventType;
-      if (action === 'INSERT') {
-        toast.success(t('campaigns.toast.created'));
-      } else if (action === 'UPDATE') {
-        toast.success(t('campaigns.toast.updated'));
-      } else if (action === 'DELETE') {
-        toast.success(t('campaigns.toast.deleted'));
-      }
-    },
-  });
+  // Real-time subscriptions - temporarily disabled to debug loading issue
+  // useRealtimeSubscription({
+  //   table: 'ad_campaign',
+  //   event: '*',
+  //   queryKey: ['campaigns'],
+  //   onUpdate: (payload) => {
+  //     const action = payload.eventType;
+  //     if (action === 'INSERT') {
+  //       toast.success(t('campaigns.toast.created'));
+  //     } else if (action === 'UPDATE') {
+  //       toast.success(t('campaigns.toast.updated'));
+  //     } else if (action === 'DELETE') {
+  //       toast.success(t('campaigns.toast.deleted'));
+  //     }
+  //   },
+  // });
 
   const getStatusBadge = (status: string | null) => {
     switch (status) {

@@ -39,13 +39,13 @@ export function ApiTestPage() {
     // ========== CONTENT ENDPOINTS ==========
     {
       name: 'Get Content',
-      endpoint: 'content',
+      endpoint: 'content_item',
       method: 'GET',
-      table: 'content',
+      table: 'content_item',
       description: 'Fetch all content items',
       testFn: async () => {
         const { data, error } = await supabase
-          .from('content')
+          .from('content_item')
           .select('*')
           .limit(5);
         if (error) throw error;
@@ -54,45 +54,46 @@ export function ApiTestPage() {
     },
     {
       name: 'Insert Content',
-      endpoint: 'content',
+      endpoint: 'content_item',
       method: 'POST',
-      table: 'content',
+      table: 'content_item',
       description: 'Create new content item',
       testFn: async () => {
         const { data, error } = await supabase
-          .from('content')
+          .from('content_item')
           .insert({
-            game: 'who_among_us',
-            content_text: { en: 'Test Question', ar: 'سؤال اختبار' },
-            level: 1,
+            game_key: 'who_among_us',
+            payload: { question: 'Test Question', question_en: 'Test Question' },
+            difficulty_or_depth: '1',
             tags: ['test'],
-            active: true
+            active: true,
+            status: 'draft'
           })
           .select()
           .single();
         if (error) throw error;
         // Clean up
         if (data) {
-          await supabase.from('content').delete().eq('id', data.id);
+          await supabase.from('content_item').delete().eq('id', data.id);
         }
         return data;
       }
     },
     {
       name: 'Update Content',
-      endpoint: 'content',
+      endpoint: 'content_item',
       method: 'PUT',
-      table: 'content',
+      table: 'content_item',
       description: 'Update content item',
       testFn: async () => {
         const { data: items } = await supabase
-          .from('content')
+          .from('content_item')
           .select('id')
           .limit(1);
         if (!items || items.length === 0) throw new Error('No content to update');
         
         const { data, error } = await supabase
-          .from('content')
+          .from('content_item')
           .update({ updated_at: new Date().toISOString() })
           .eq('id', items[0].id)
           .select()
@@ -144,7 +145,7 @@ export function ApiTestPage() {
           .from('pack_item')
           .select(`
             *,
-            content (*),
+            content_item (*),
             content_pack (*)
           `)
           .limit(5);

@@ -31,6 +31,9 @@ export const useUsers = () => {
 
       return (data || []) as User[];
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    refetchOnWindowFocus: false,
   });
 };
 
@@ -48,6 +51,9 @@ export const useUser = (id: string) => {
       return data as User;
     },
     enabled: !!id,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    refetchOnWindowFocus: false,
   });
 };
 

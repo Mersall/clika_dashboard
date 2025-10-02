@@ -11,6 +11,11 @@ import { HomePage } from '@pages/HomePage';
 import { ContentPage } from '@pages/ContentPage';
 import { ContentReviewPage } from '@pages/ContentReviewPage';
 import { ContentPacksPage } from '@pages/ContentPacksPage';
+import { ContentPackStorePage } from '@pages/ContentPackStorePage';
+import { UserPurchasesPage } from '@pages/UserPurchasesPage';
+import { EdgeFunctionsPage } from '@pages/EdgeFunctionsPage';
+import { FixLogosPage } from '@pages/FixLogosPage';
+import { TestLogosPage } from '@pages/TestLogosPage';
 import { RoundAnalyticsPage } from '@pages/RoundAnalyticsPage';
 import { UserLocationPage } from '@pages/UserLocationPage';
 import { RetentionCohortsPage } from '@pages/RetentionCohortsPage';
@@ -52,6 +57,11 @@ function App() {
             <Route path="content" element={<ContentPage />} />
             <Route path="content/review" element={<ContentReviewPage />} />
             <Route path="content-packs" element={<ContentPacksPage />} />
+            <Route path="pack-store" element={<ContentPackStorePage />} />
+            <Route path="purchases" element={<UserPurchasesPage />} />
+            <Route path="edge-functions" element={<EdgeFunctionsPage />} />
+            <Route path="fix-logos" element={<FixLogosPage />} />
+            <Route path="test-logos" element={<TestLogosPage />} />
             <Route path="rounds" element={<RoundAnalyticsPage />} />
             <Route path="locations" element={<UserLocationPage />} />
             <Route path="retention" element={<RetentionCohortsPage />} />
