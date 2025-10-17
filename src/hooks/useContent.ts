@@ -98,17 +98,25 @@ export const useUpdateContent = () => {
         .from('content_item')
         .update(updates)
         .eq('id', id)
-        .select()
-        .single();
+        .select();
 
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.error('Update error details:', error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('Update failed: No rows were updated. Check RLS policies.');
+      }
+
+      return data[0];
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['content'] });
     },
     onError: (error) => {
       console.error('Update content error:', error);
+      toast.error(`Failed to update: ${error.message}`);
     },
   });
 };
