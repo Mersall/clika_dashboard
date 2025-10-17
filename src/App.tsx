@@ -55,7 +55,7 @@ function App() {
           >
             <Route index element={<HomePage />} />
             <Route path="content" element={<ContentPage />} />
-            <Route path="content/review" element={<ContentReviewPage />} />
+            <Route path="review" element={<ContentReviewPage />} />
             <Route path="content-packs" element={<ContentPacksPage />} />
             <Route path="pack-store" element={<ContentPackStorePage />} />
             <Route path="purchases" element={<UserPurchasesPage />} />

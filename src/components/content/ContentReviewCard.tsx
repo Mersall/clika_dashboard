@@ -20,7 +20,6 @@ const gameLabels: Record<string, string> = {
   agree_disagree: 'Agree/Disagree',
   guess_the_person: 'Guess the Person',
   football_trivia: 'Football Trivia',
-  football_logos: 'Football Logos',
   football_players: 'Football Players',
   football_moments: 'Football Moments',
 };
@@ -43,14 +42,10 @@ export function ContentReviewCard({
       return item.payload?.statement || 'No statement';
     } else if (item.game_key === 'guess_the_person') {
       return item.payload?.persona?.name || item.payload?.person_name || 'No person';
-    } else if (item.game_key === 'football_trivia') {
-      return item.payload?.question || item.payload?.question_en || 'No question';
-    } else if (item.game_key === 'football_logos') {
-      return item.payload?.question || item.payload?.question_en || 'Which club is this?';
-    } else if (item.game_key === 'football_players') {
-      return `Guess the player: ${item.payload?.answer || item.payload?.answer_ar || 'Unknown'}`;
-    } else if (item.game_key === 'football_moments') {
-      return item.payload?.moment_description || item.payload?.description || item.payload?.question || 'No moment';
+    } else if (item.game_key === 'football_trivia' || item.game_key === 'football_players' ||
+               item.game_key === 'football_moments') {
+      // For bilingual content, show game type as title
+      return gameLabels[item.game_key] || item.game_key;
     }
     return 'Unknown content';
   };
@@ -79,16 +74,127 @@ export function ContentReviewCard({
           {getContentText()}
         </h3>
 
-        {item.game_key === 'football_logos' && (
-          <div className="mb-3">
-            <FootballLogo
-              logoUrl={item.payload?.logo_url}
-              teamName={item.payload?.answer_en || item.payload?.answer}
-              className="h-32 w-32"
-            />
+        {/* Bilingual Football Content */}
+        {(item.game_key === 'football_trivia' || item.game_key === 'football_players' ||
+          item.game_key === 'football_moments') && (
+          <div className="space-y-3 mb-3">
+            {/* Question in both languages */}
+            {(item.payload?.question_ar || item.payload?.question_en) && (
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 space-y-2">
+                {item.payload?.question_ar && (
+                  <div className="text-right" dir="rtl">
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">السؤال</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">{item.payload.question_ar}</p>
+                  </div>
+                )}
+                {item.payload?.question_en && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Question</p>
+                    <p className="text-sm text-gray-900 dark:text-gray-100">{item.payload.question_en}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Hints for football_players */}
+            {item.game_key === 'football_players' && item.payload?.hints && Array.isArray(item.payload.hints) && item.payload.hints.length > 0 && (
+              <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+                <div className="text-right" dir="rtl">
+                  <p className="text-xs font-medium text-purple-700 dark:text-purple-400 mb-2">التلميحات</p>
+                  <ul className="list-disc list-inside text-sm text-purple-900 dark:text-purple-100 space-y-1">
+                    {item.payload.hints.map((hint: string, index: number) => (
+                      <li key={index}>{hint}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* Answer in both languages */}
+            {(item.payload?.answer_ar || item.payload?.answer_en) && (
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 space-y-2">
+                {item.payload?.answer_ar && (
+                  <div className="text-right" dir="rtl">
+                    <p className="text-xs font-medium text-green-700 dark:text-green-400 mb-1">الإجابة</p>
+                    <p className="text-sm font-semibold text-green-900 dark:text-green-100">{item.payload.answer_ar}</p>
+                  </div>
+                )}
+                {item.payload?.answer_en && (
+                  <div>
+                    <p className="text-xs font-medium text-green-700 dark:text-green-400 mb-1">Answer</p>
+                    <p className="text-sm font-semibold text-green-900 dark:text-green-100">{item.payload.answer_en}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Explanation in both languages */}
+            {(item.payload?.explanation_ar || item.payload?.explanation_en) && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 space-y-2">
+                {item.payload?.explanation_ar && (
+                  <div className="text-right" dir="rtl">
+                    <p className="text-xs font-medium text-blue-700 dark:text-blue-400 mb-1">الشرح</p>
+                    <p className="text-sm text-blue-900 dark:text-blue-100">{item.payload.explanation_ar}</p>
+                  </div>
+                )}
+                {item.payload?.explanation_en && (
+                  <div>
+                    <p className="text-xs font-medium text-blue-700 dark:text-blue-400 mb-1">Explanation</p>
+                    <p className="text-sm text-blue-900 dark:text-blue-100">{item.payload.explanation_en}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Metadata */}
+            {item.payload?.metadata && (
+              <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Metadata</p>
+                  {item.payload.metadata.verified && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+                      ✓ Verified
+                    </span>
+                  )}
+                </div>
+
+                {/* Category, League, Year, Original ID */}
+                {(item.payload.metadata.category || item.payload.metadata.league || item.payload.metadata.year || item.payload?.original_id) && (
+                  <div className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                    {item.payload.metadata.category && (
+                      <p><span className="font-medium">Category:</span> {item.payload.metadata.category}</p>
+                    )}
+                    {item.payload.metadata.league && (
+                      <p><span className="font-medium">League:</span> {item.payload.metadata.league}</p>
+                    )}
+                    {item.payload.metadata.year && (
+                      <p><span className="font-medium">Year:</span> {item.payload.metadata.year}</p>
+                    )}
+                    {item.payload?.original_id && (
+                      <p><span className="font-medium">Original ID:</span> {item.payload.original_id.slice(0, 8)}...</p>
+                    )}
+                  </div>
+                )}
+
+                {/* Tags */}
+                {item.payload.metadata.tags && Array.isArray(item.payload.metadata.tags) && item.payload.metadata.tags.length > 0 && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Tags:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {item.payload.metadata.tags.map((tag: string, index: number) => (
+                        <span key={index} className="inline-flex items-center px-2 py-0.5 rounded text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
-        
+
+        {/* Non-football content */}
         {item.game_key === 'guess_the_person' && (item.payload?.persona?.clues || item.payload?.clues) && (
           <div className="mb-2">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Clues:</p>
@@ -97,50 +203,6 @@ export function ContentReviewCard({
                 <li key={index}>{clue}</li>
               ))}
             </ul>
-          </div>
-        )}
-
-        {item.game_key === 'football_trivia' && item.payload?.answer && (
-          <div className="mb-2">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              <span className="font-medium">Answer:</span> {item.payload.answer}
-            </p>
-            {item.payload.category && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                <span className="font-medium">Category:</span> {item.payload.category}
-              </p>
-            )}
-          </div>
-        )}
-
-        {item.game_key === 'football_players' && (item.payload?.hints_ar || item.payload?.hints) && (
-          <div className="mb-2">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">التلميحات:</p>
-            <ul className="list-disc list-inside text-sm text-gray-700 dark:text-gray-300" dir="rtl">
-              {(item.payload.hints_ar || item.payload.hints)?.map((hint: string, index: number) => (
-                <li key={index}>{hint}</li>
-              ))}
-            </ul>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-              <span className="font-medium">الإجابة:</span> {item.payload.answer_ar || item.payload.answer}
-            </p>
-          </div>
-        )}
-
-        {(item.game_key === 'football_logos' || item.game_key === 'football_moments') && item.payload && (
-          <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">
-            {item.payload.answer && (
-              <p><span className="font-medium">Answer:</span> {item.payload.answer}</p>
-            )}
-            {item.payload.category && (
-              <p><span className="font-medium">Category:</span> {item.payload.category}</p>
-            )}
-            {item.payload.league && (
-              <p><span className="font-medium">League:</span> {item.payload.league}</p>
-            )}
-            {item.payload.year && (
-              <p><span className="font-medium">Year:</span> {item.payload.year}</p>
-            )}
           </div>
         )}
         

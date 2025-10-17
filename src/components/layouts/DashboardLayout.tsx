@@ -35,7 +35,7 @@ import { HelpTooltip } from '../ui/HelpTooltip';
 
 export function DashboardLayout() {
   const { user, signOut } = useAuth();
-  const { userProfile, isAdmin } = useUserRole();
+  const { userProfile, isAdmin, isReviewer } = useUserRole();
   const { t } = useTranslation();
   const { mode, toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -48,7 +48,7 @@ export function DashboardLayout() {
     { name: 'Purchases', href: '/purchases', icon: ShoppingCartIcon, requiredRole: 'admin' },
     { name: 'Edge Functions', href: '/edge-functions', icon: BoltIcon, requiredRole: 'admin' },
     { name: '🔧 Fix Logos', href: '/fix-logos', icon: WrenchIcon, requiredRole: 'admin' },
-    { name: t('nav.review'), href: '/content/review', icon: ClipboardDocumentCheckIcon, requiredRole: 'reviewer' },
+    { name: t('nav.review'), href: '/review', icon: ClipboardDocumentCheckIcon },
     { name: t('nav.sessions'), href: '/sessions', icon: PlayIcon },
     { name: t('nav.deviceAnalytics'), href: '/device-analytics', icon: DevicePhoneMobileIcon },
     { name: t('nav.rounds'), href: '/rounds', icon: BeakerIcon },
@@ -66,7 +66,7 @@ export function DashboardLayout() {
   const filteredNavigation = navigation.filter((item) => {
     if (!item.requiredRole) return true;
     if (item.requiredRole === 'admin' && isAdmin) return true;
-    if (item.requiredRole === 'reviewer' && (userProfile?.role === 'reviewer' || isAdmin)) return true;
+    if (item.requiredRole === 'reviewer' && isReviewer) return true;
     return false;
   });
 

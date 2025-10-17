@@ -25,7 +25,6 @@ export function ContentReviewPage() {
     { value: 'agree_disagree', label: t('content.games.agree_disagree') },
     { value: 'guess_the_person', label: t('content.games.guess_the_person') },
     { value: 'football_trivia', label: t('content.games.football_trivia') },
-    { value: 'football_logos', label: t('content.games.football_logos') },
     { value: 'football_players', label: t('content.games.football_players') },
     { value: 'football_moments', label: t('content.games.football_moments') },
   ];
@@ -44,10 +43,8 @@ export function ContentReviewPage() {
     );
   }
 
-  // Check if user has reviewer or admin role
-  if (!isReviewer) {
-    return <Navigate to="/" replace />;
-  }
+  // Permission check removed - all logged-in users can access Review page
+  // Admins and reviewers have full functionality
 
   const filteredItems = items?.filter(item => item.status === selectedStatus) || [];
 

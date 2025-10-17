@@ -5,7 +5,7 @@ import { supabase } from '@services/supabase';
 interface UserProfile {
   user_id: string;
   display_name?: string;
-  role?: 'admin' | 'editor' | 'reviewer' | 'advertiser' | 'analyst';
+  role?: 'admin' | 'editor' | 'reviewer' | 'advertiser' | 'analyst' | 'dashboard_admin' | 'super_admin' | 'dashboard_viewer';
   created_at: string;
   updated_at: string;
 }
@@ -55,9 +55,9 @@ export function useUserRole() {
   }, [user]);
 
   const role = userProfile?.role || 'reviewer';
-  const isAdmin = role === 'admin';
+  const isAdmin = role === 'admin' || role === 'dashboard_admin' || role === 'super_admin';
   const isEditor = role === 'editor' || isAdmin;
-  const isReviewer = role === 'reviewer' || isEditor;
+  const isReviewer = role === 'reviewer' || role === 'dashboard_viewer' || isEditor || isAdmin;
 
   return {
     userProfile,
